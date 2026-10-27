@@ -1,6 +1,7 @@
 ---
 import { render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import CoverImage from '../../components/CoverImage.astro';
 import { loadInsights, type Insight } from '../../lib/load-insights';
 import { insightHref } from '../../lib/insights';
 import { formatDate, isoDate } from '../../lib/format';
@@ -72,6 +73,8 @@ const breadcrumbs = {
         )
       }
     </p>
+
+    {data.cover && <CoverImage {...data.cover} priority />}
 
     <aside class="summary" aria-labelledby="ringkasan">
       <h2 id="ringkasan">{t.insights.summaryTitle}</h2>

@@ -9,6 +9,11 @@ author: 'Irfan Taufik Risda'
 publishedAt: 2026-10-27
 areas: ['A', 'B']
 draft: false
+cover:
+  src: '../../assets/images/artikel-keputusan-founder.jpg'
+  alt: 'Perempuan berhijab dan berkacamata membaca buku di meja kerja kantor yang penuh dokumen'
+  credit: '@ivanbe / Unsplash'
+  creditUrl: 'https://unsplash.com/photos/woman-in-white-hijab-and-black-framed-eyeglasses-NAsmdV6dbao'
 ---
 
 Di banyak bisnis yang sedang tumbuh, ada satu pola yang hampir selalu muncul: semakin banyak orang di tim, semakin banyak hal yang harus "ditanyakan dulu ke founder". Persetujuan diskon, pemilihan vendor kecil, perubahan jadwal, hingga keputusan yang sebenarnya sudah pernah diambil berkali-kali.

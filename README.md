@@ -14,7 +14,7 @@ Dibangun dengan Astro (output statis) untuk Cloudflare Pages.
 | `npm run test:coverage` | Test + laporan coverage `src/tools/` (butuh `dist/`) |
 | `npm run build` | Build ke `dist/` |
 | `npm run verify` | check + build + test + cek tautan — wajib hijau sebelum commit |
-| `npm run test:e2e` | E2E Playwright di Chromium terhadap `dist/` (butuh build; browser: `npx playwright install chromium` bila belum ada) |
+| `npm run test:e2e` | E2E Playwright di Chromium terhadap `dist/` (butuh build; browser: `npx playwright install chromium` bila belum ada). Hentikan `npm run preview` lain dulu: Astro hanya mengizinkan satu server preview per proyek |
 | `npm run verify:full` | `verify` + `test:e2e` |
 
 ## Test

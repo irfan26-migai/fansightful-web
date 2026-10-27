@@ -7,7 +7,7 @@ const AREA = z.enum(['A', 'B', 'C', 'D', 'E']);
 // Template artikel: blueprint §7.2. Nama file (tanpa .md) menjadi slug URL /insights/<slug>/.
 const insights = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/insights' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string().max(90),
     /** Meta description, 70–160 karakter. */
     description: z.string().min(70).max(160),
@@ -23,6 +23,17 @@ const insights = defineCollection({
       .default([]),
     /** Draf hanya tampil di `npm run dev`, tidak pernah ikut build produksi. */
     draft: z.boolean().default(false),
+    /** Foto sampul (opsional). Simpan di src/assets/images/ dan catat di CREDITS.md. */
+    cover: z
+      .object({
+        src: image(),
+        /** Teks alt bahasa Indonesia yang menjelaskan isi foto. */
+        alt: z.string().min(15),
+        /** Kredit singkat, mis. "@ivanbe / Unsplash". */
+        credit: z.string(),
+        creditUrl: z.url(),
+      })
+      .optional(),
   }),
 });
 

@@ -9,6 +9,11 @@ author: 'Irfan Taufik Risda'
 publishedAt: 2026-10-27
 areas: ['C', 'E']
 draft: false
+cover:
+  src: '../../assets/images/artikel-target-sticky-note.jpg'
+  alt: 'Seorang perempuan menempelkan catatan tempel berisi rencana kerja pada dinding kaca kantor'
+  credit: '@airfocus / Unsplash'
+  creditUrl: 'https://unsplash.com/photos/woman-in-gray-long-sleeve-shirt-hugging-man-in-blue-long-sleeve-shirt-f2C59x5uvn8'
 ---
 
 Rapat awal tahun selesai dengan daftar target yang rapi: omzet naik sekian persen, keluhan pelanggan turun, waktu pengiriman lebih cepat. Tiga bulan kemudian, sebagian besar angka itu belum bergerak — dan ketika ditanya, setiap tim menunjuk tim lain.

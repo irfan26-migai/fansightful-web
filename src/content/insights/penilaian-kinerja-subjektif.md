@@ -9,6 +9,11 @@ author: 'Irfan Taufik Risda'
 publishedAt: 2026-10-27
 areas: ['E']
 draft: false
+cover:
+  src: '../../assets/images/artikel-penilaian-kinerja.jpg'
+  alt: 'Dua pria berbincang empat mata di ruang rapat kecil dengan laptop di meja'
+  credit: '@edikurniawan / Unsplash'
+  creditUrl: 'https://unsplash.com/photos/two-men-sitting-at-a-table-with-a-laptop-uPnvAYdLhNw'
 ---
 
 Akhir tahun tiba, formulir penilaian dibagikan, dan suasana tim mendadak tegang. Karyawan merasa nilainya tidak mencerminkan kerja kerasnya. Atasan merasa sudah adil, tetapi kesulitan menjelaskan alasannya. Keduanya sebenarnya menghadapi masalah yang sama: **tidak ada kesepakatan yang jelas tentang apa yang dinilai, sejak awal.**

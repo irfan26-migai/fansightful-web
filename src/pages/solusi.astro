@@ -1,5 +1,7 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
+import CoverImage from '../components/CoverImage.astro';
+import workshop from '../assets/images/solusi-workshop.jpg';
 
 // Default sementara (rencana §6): tanpa daftar layanan, harga, mitra, atau nama entitas sampai Q-02 diputuskan.
 ---
@@ -10,6 +12,14 @@ import PageLayout from '../layouts/PageLayout.astro';
   eyebrow="Solusi"
   lead="Tools dan wawasan di Fansightful dapat Anda gunakan secara gratis. Bila Anda butuh bantuan menerapkannya, kami siap berdiskusi."
 >
+  <CoverImage
+    src={workshop}
+    alt="Seorang perempuan mempresentasikan grafik di layar besar kepada rekan kerja yang bertepuk tangan di ruang rapat"
+    credit="@fiqihalfarish / Unsplash"
+    creditUrl="https://unsplash.com/photos/team-collaborates-during-a-business-presentation-with-data-on-screen-dz2ApK93Idc"
+    priority
+  />
+
   <h2>Butuh bantuan menerapkan hasil?</h2>
   <p>
     Ceritakan kondisi bisnis Anda dan hasil pemeriksaan yang ingin ditindaklanjuti. Kami akan membalas dengan
