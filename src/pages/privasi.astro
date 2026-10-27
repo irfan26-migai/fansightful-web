@@ -1,8 +1,10 @@
 ---
 import PageLayout from '../layouts/PageLayout.astro';
-import Pending from '../components/Pending.astro';
+import { CONTACT_EMAIL, FOUNDER } from '../config';
 
-// DRAF. Isi mencerminkan perilaku situs saat ini; perbarui setiap kali analytics, form, atau newsletter ditambahkan.
+// Isi mencerminkan perilaku situs saat ini; perbarui setiap kali analytics, form, atau newsletter ditambahkan.
+// Belum ditinjau penasihat hukum terhadap UU PDP (lihat decision log D-IMP-19).
+const UPDATED = '27 Oktober 2026';
 ---
 
 <PageLayout
@@ -11,9 +13,13 @@ import Pending from '../components/Pending.astro';
   eyebrow="Privasi"
   lead="Kami mengumpulkan data sesedikit mungkin dan menjelaskan dengan terbuka apa yang terjadi pada data Anda."
 >
-  <Pending
-    what="Tinjauan kebijakan ini terhadap UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi, entitas pengendali data, masa simpan pesan, dan tanggal berlaku"
-  />
+  <p><em>Terakhir diperbarui: {UPDATED}</em></p>
+
+  <h2>Siapa yang mengelola data</h2>
+  <p>
+    Fansightful dikelola oleh {FOUNDER?.name}. Pertanyaan atau permintaan terkait data pribadi dapat dikirim ke
+    <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>.
+  </p>
 
   <h2>Jawaban Business &amp; People Health Check</h2>
   <p>
@@ -24,9 +30,13 @@ import Pending from '../components/Pending.astro';
 
   <h2>Pesan yang Anda kirim</h2>
   <p>
-    Bila Anda menghubungi kami melalui email, kami menerima alamat email, nama, dan isi pesan yang Anda tulis. Data ini
-    hanya digunakan untuk membalas dan menindaklanjuti pertanyaan Anda, dan tidak dibagikan kepada pihak lain untuk
-    keperluan pemasaran.
+    Bila Anda menghubungi kami melalui email, kami menerima alamat email, nama, dan isi pesan yang Anda tulis. Pesan
+    diterima di alamat email kerja pengelola pada domain mierakigai.com. Data ini hanya digunakan untuk membalas dan
+    menindaklanjuti pertanyaan Anda, dan tidak dibagikan kepada pihak lain untuk keperluan pemasaran.
+  </p>
+  <p>
+    Pesan disimpan paling lama 12 bulan sejak komunikasi terakhir, lalu dihapus. Anda dapat meminta penghapusan lebih
+    awal kapan saja.
   </p>
 
   <h2>Data teknis dan hosting</h2>
@@ -44,8 +54,8 @@ import Pending from '../components/Pending.astro';
 
   <h2>Hak Anda</h2>
   <p>
-    Anda dapat meminta akses, perbaikan, atau penghapusan data yang Anda kirimkan kepada kami melalui halaman
-    <a href="/kontak/">Kontak</a>.
+    Anda dapat meminta akses, perbaikan, atau penghapusan data yang Anda kirimkan kepada kami melalui
+    <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>. Kami akan menanggapi permintaan tersebut secepatnya.
   </p>
 
   <h2>Perubahan kebijakan</h2>

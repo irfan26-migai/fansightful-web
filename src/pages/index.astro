@@ -122,9 +122,9 @@ const steps = [
       FOUNDER ? (
         <div class="prose">
           <p>
-            <strong>{FOUNDER.name}</strong> — {FOUNDER.role}
+            <strong>{FOUNDER.name}</strong> — {FOUNDER.role} · {FOUNDER.affiliation}
           </p>
-          <p>{FOUNDER.bio}</p>
+          <p>{FOUNDER.shortBio}</p>
         </div>
       ) : (
         <Pending what="Profil founder/kurator: nama, peran, 1–2 kalimat keahlian yang relevan, foto (opsional)" />

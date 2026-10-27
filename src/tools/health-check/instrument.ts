@@ -1,6 +1,6 @@
-// DRAFT — perlu review founder sebelum cutover produksi (P0-05).
-// Pernyataan, penjelasan, dan langkah berikutnya di file ini belum divalidasi; hasil tool selalu
-// disajikan sebagai pemeriksaan awal berbasis persepsi responden.
+// Versi 1 — ditinjau Claude atas delegasi founder (27 Okt 2026, D-IMP-20): pernyataan yang menanyakan dua hal
+// sekaligus dipecah menjadi satu hal per pernyataan. Instrumen belum divalidasi secara statistik; hasil tool
+// selalu disajikan sebagai pemeriksaan awal berbasis persepsi responden.
 
 export type AreaId = 'A' | 'B' | 'C' | 'D' | 'E';
 
@@ -81,7 +81,7 @@ export const AREAS: Area[] = [
 ];
 
 export const STATEMENTS: Statement[] = [
-  { id: 'A1', area: 'A', text: 'Setiap posisi kunci memiliki uraian tanggung jawab yang ditulis dan dipahami pemegangnya.' },
+  { id: 'A1', area: 'A', text: 'Setiap posisi kunci memiliki uraian tanggung jawab tertulis.' },
   { id: 'A2', area: 'A', text: 'Jelas siapa yang mengambil keputusan untuk hal-hal rutin.' },
   { id: 'A3', area: 'A', text: 'Ketika ada pekerjaan baru, cepat diketahui siapa yang bertanggung jawab.' },
   { id: 'A4', area: 'A', text: 'Tanggung jawab antar-posisi jarang tumpang tindih atau saling lempar.' },
@@ -93,16 +93,16 @@ export const STATEMENTS: Statement[] = [
 
   { id: 'C1', area: 'C', text: 'Tujuan bisnis 6–12 bulan ke depan tertulis dan diketahui para pimpinan tim.' },
   { id: 'C2', area: 'C', text: 'Setiap tim tahu bagaimana pekerjaannya berkontribusi pada tujuan tersebut.' },
-  { id: 'C3', area: 'C', text: 'Prioritas dibahas ulang secara berkala dan perubahan dikomunikasikan.' },
+  { id: 'C3', area: 'C', text: 'Perubahan prioritas dikomunikasikan kepada tim yang terdampak.' },
   { id: 'C4', area: 'C', text: 'Ketika prioritas bertabrakan, ada cara yang disepakati untuk memutuskannya.' },
 
   { id: 'D1', area: 'D', text: 'Proses inti (mis. penjualan, layanan, operasional) terdokumentasi.' },
-  { id: 'D2', area: 'D', text: 'Masalah yang berulang dibahas dan diperbaiki penyebabnya.' },
+  { id: 'D2', area: 'D', text: 'Masalah yang berulang ditelusuri sampai ke penyebabnya, bukan hanya diatasi gejalanya.' },
   { id: 'D3', area: 'D', text: 'Karyawan baru dapat mempelajari cara kerja tanpa sepenuhnya bergantung pada satu orang.' },
   { id: 'D4', area: 'D', text: 'Serah terima pekerjaan antar-tim jarang menimbulkan kesalahan atau keterlambatan.' },
 
   { id: 'E1', area: 'E', text: 'Setiap orang tahu ukuran keberhasilan pekerjaannya.' },
   { id: 'E2', area: 'E', text: 'Ada percakapan umpan balik kinerja secara rutin, bukan hanya akhir tahun.' },
-  { id: 'E3', area: 'E', text: 'Penilaian kinerja didasarkan pada hasil dan perilaku yang disepakati sebelumnya.' },
+  { id: 'E3', area: 'E', text: 'Penilaian kinerja mengacu pada target yang disepakati di awal periode.' },
   { id: 'E4', area: 'E', text: 'Kinerja yang kurang ditindaklanjuti dengan rencana perbaikan yang jelas.' },
 ];

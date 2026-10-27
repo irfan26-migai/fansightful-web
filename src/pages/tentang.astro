@@ -49,9 +49,9 @@ const principles = [
     FOUNDER ? (
       <>
         <p>
-          <strong>{FOUNDER.name}</strong> — {FOUNDER.role}
+          <strong>{FOUNDER.name}</strong> — {FOUNDER.role} · {FOUNDER.affiliation}
         </p>
-        <p>{FOUNDER.bio}</p>
+        <p>{FOUNDER.longBio}</p>
       </>
     ) : (
       <Pending what="Profil founder/kurator: nama, peran, latar belakang dan keahlian yang relevan" />
@@ -60,8 +60,12 @@ const principles = [
 
   <h2>Independensi dan hubungan dengan pihak lain</h2>
   <p>
-    Fansightful adalah brand dan platform independen. Bila suatu layanan diberikan oleh perusahaan terkait atau mitra,
-    kami menyebutkan penyedianya dengan jelas.
+    Fansightful dikelola dan dikurasi oleh Irfan Taufik Risda. Selain itu, Irfan bekerja sebagai Human Capital Manager
+    di Mierakigai; kami menyebutkannya agar hubungan tersebut jelas bagi pembaca.
   </p>
-  <Pending what="Entitas pengelola Fansightful dan hubungannya dengan penyedia layanan terkait (Q-02, Q-07)" />
+  <p>
+    Tools dan Insights di Fansightful dapat digunakan secara gratis. Saat ini belum ada paket layanan berbayar yang
+    ditawarkan. Bila kelak ada layanan — dari Fansightful, perusahaan terkait, atau mitra — kami akan menyebutkan dengan
+    jelas siapa penyedianya.
+  </p>
 </PageLayout>

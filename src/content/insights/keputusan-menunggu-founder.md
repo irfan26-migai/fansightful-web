@@ -5,13 +5,11 @@ summary:
   - 'Keputusan yang menumpuk di founder biasanya tanda hak keputusan belum jelas, bukan tanda tim kurang mampu.'
   - 'Mulailah dari keputusan rutin yang paling sering berulang, bukan dari keputusan besar.'
   - 'Delegasi berhasil bila batasnya tertulis: apa yang boleh diputuskan, sampai batas apa, dan kapan perlu eskalasi.'
-author: 'Draf — belum ditinjau founder'
+author: 'Irfan Taufik Risda'
 publishedAt: 2026-10-27
 areas: ['A', 'B']
-draft: true
+draft: false
 ---
-
-<!-- DRAF CONTOH untuk menguji template artikel. Isi harus ditinjau atau ditulis ulang oleh founder sebelum `draft: false`. -->
 
 Di banyak bisnis yang sedang tumbuh, ada satu pola yang hampir selalu muncul: semakin banyak orang di tim, semakin banyak hal yang harus "ditanyakan dulu ke founder". Persetujuan diskon, pemilihan vendor kecil, perubahan jadwal, hingga keputusan yang sebenarnya sudah pernah diambil berkali-kali.
 
