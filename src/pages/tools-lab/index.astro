@@ -1,0 +1,90 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { id as t } from '../../i18n/id';
+
+// Hanya tool yang benar-benar tersedia yang ditampilkan (blueprint §3.1).
+const tools = [
+  {
+    href: '/tools-lab/health-check/',
+    title: t.healthCheck.title,
+    summary: t.healthCheck.summary,
+    facts: t.healthCheck.facts,
+  },
+];
+---
+
+<BaseLayout title={t.toolsLab.title} description={t.toolsLab.description}>
+  <section class="container tools">
+    <p class="eyebrow">Tools Lab</p>
+    <h1>{t.toolsLab.title}</h1>
+    <p class="lead prose">{t.toolsLab.intro}</p>
+
+    <ul class="tool-list">
+      {
+        tools.map((tool) => (
+          <li class="tool-card">
+            <h2>
+              <a href={tool.href}>{tool.title}</a>
+            </h2>
+            <p>{tool.summary}</p>
+            <ul class="tool-card__facts">
+              {tool.facts.map((f) => (
+                <li>{f}</li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>
+
+<style>
+  .tools {
+    padding-block: var(--space-12) var(--space-8);
+  }
+
+  .tool-list {
+    display: grid;
+    gap: var(--space-6);
+    margin: var(--space-8) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 48rem) {
+    .tool-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .tool-card {
+    position: relative;
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .tool-card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .tool-card h2 {
+    font-size: var(--text-lg);
+  }
+
+  /* Seluruh kartu dapat diklik lewat satu tautan di judul. */
+  .tool-card h2 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .tool-card__facts {
+    margin: 0;
+    padding-left: var(--space-6);
+    color: var(--color-ink-muted);
+    font-size: var(--text-sm);
+  }
+</style>

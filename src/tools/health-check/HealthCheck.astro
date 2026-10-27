@@ -1,0 +1,344 @@
+---
+import { AREAS, SCALE, STATEMENTS } from './instrument';
+import { id as t } from '../../i18n/id';
+
+const c = t.healthCheck;
+---
+
+<div class="hc" data-hc>
+  <section class="hc-intro" data-hc-intro aria-labelledby="hc-title">
+    <p class="eyebrow">Tools Lab</p>
+    <h1 id="hc-title">{c.title}</h1>
+    <p class="lead prose">{c.summary}</p>
+    <ul class="hc-facts">
+      {c.facts.map((f) => <li>{f}</li>)}
+    </ul>
+
+    <div class="hc-intro__grid">
+      <div>
+        <h2>{c.whatTitle}</h2>
+        <ul>
+          {AREAS.map((a) => <li>{a.title}</li>)}
+        </ul>
+      </div>
+      <div>
+        <h2>{c.whoTitle}</h2>
+        <p>{c.who}</p>
+      </div>
+    </div>
+
+    <aside class="callout" aria-labelledby="hc-limits">
+      <h2 id="hc-limits">{c.limitsTitle}</h2>
+      <ul>
+        {c.limits.map((l) => <li>{l}</li>)}
+      </ul>
+    </aside>
+
+    <button class="button hc-start" type="button" data-hc-start hidden>{c.start}</button>
+    <noscript><p class="callout callout--warning">{c.noscript}</p></noscript>
+  </section>
+
+  <form class="hc-form" data-hc-form novalidate aria-labelledby="hc-title">
+    <p class="hc-instruction">{c.instruction}</p>
+    <div class="hc-error" data-hc-error role="alert"></div>
+
+    {
+      AREAS.map((area, i) => (
+        <section class="hc-step" data-hc-step={area.id} aria-labelledby={`hc-step-${area.id}`}>
+          <p class="hc-progress">
+            <span>{c.stepLabel(i + 1, AREAS.length)}</span>
+            <progress max={AREAS.length} value={i + 1} aria-hidden="true" />
+          </p>
+          <h2 id={`hc-step-${area.id}`} tabindex="-1">{area.title}</h2>
+          {STATEMENTS.filter((s) => s.area === area.id).map((s) => (
+            <fieldset class="hc-q" data-hc-q={s.id} aria-describedby={`err-${s.id}`}>
+              <legend>{s.text}</legend>
+              <div class="hc-options">
+                {SCALE.map((opt) => (
+                  <label class="hc-option">
+                    <input type="radio" name={s.id} value={String(opt.value)} required />
+                    <span>{opt.label}</span>
+                  </label>
+                ))}
+              </div>
+              <p class="hc-field-error" id={`err-${s.id}`} hidden>
+                {c.errorField}
+              </p>
+            </fieldset>
+          ))}
+        </section>
+      ))
+    }
+
+    <div class="hc-nav" data-hc-nav hidden>
+      <button class="button button--secondary" type="button" data-hc-back>{c.back}</button>
+      <button class="button" type="button" data-hc-next>{c.next}</button>
+    </div>
+  </form>
+
+  <section class="hc-results" data-hc-results aria-live="polite" hidden></section>
+</div>
+
+<script>
+  import { initHealthCheck } from './ui';
+  const root = document.querySelector<HTMLElement>('[data-hc]');
+  if (root) initHealthCheck(root);
+</script>
+
+<style is:global>
+  .hc {
+    padding-block: var(--space-12) var(--space-8);
+  }
+
+  .hc-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-8);
+    padding: 0;
+    list-style: none;
+  }
+
+  .hc-facts li {
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    font-size: var(--text-sm);
+  }
+
+  .hc-intro__grid {
+    display: grid;
+    gap: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  @media (min-width: 48rem) {
+    .hc-intro__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .hc-intro h2,
+  .callout h2 {
+    font-size: var(--text-lg);
+  }
+
+  .callout {
+    max-width: var(--measure);
+    margin-block: var(--space-6);
+    padding: var(--space-4) var(--space-6);
+    border-left: 4px solid var(--color-accent);
+    border-radius: var(--radius);
+    background: var(--color-accent-soft);
+  }
+
+  .callout ul {
+    margin: 0;
+    padding-left: var(--space-6);
+  }
+
+  .callout--warning {
+    border-left-color: #8a5a00;
+    background: var(--color-warning-soft);
+  }
+
+  .hc-form {
+    max-width: var(--measure);
+    margin-top: var(--space-8);
+  }
+
+  .hc-instruction {
+    color: var(--color-ink-muted);
+  }
+
+  .hc-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--color-accent);
+  }
+
+  .hc-progress progress {
+    flex: 1;
+    max-width: 12rem;
+    height: 6px;
+    accent-color: var(--color-accent);
+  }
+
+  .hc-step h2:focus {
+    outline: none;
+  }
+
+  .hc-q {
+    margin: 0 0 var(--space-6);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .hc-q[aria-invalid='true'] {
+    border-color: #b42318;
+    box-shadow: 0 0 0 1px #b42318;
+  }
+
+  .hc-q legend {
+    float: left;
+    width: 100%;
+    margin-bottom: var(--space-3);
+    padding: 0;
+    font-weight: 500;
+  }
+
+  .hc-options {
+    clear: both;
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .hc-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 44px;
+    padding: var(--space-2) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+
+  .hc-option:hover {
+    border-color: var(--color-accent);
+  }
+
+  .hc-option:has(input:checked) {
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .hc-option input {
+    width: 1.15rem;
+    height: 1.15rem;
+    margin: 0;
+    accent-color: var(--color-accent);
+  }
+
+  .hc-field-error,
+  .hc-error:not(:empty) {
+    color: #b42318;
+    font-weight: 500;
+  }
+
+  .hc-field-error {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+  }
+
+  .hc-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  .hc-results {
+    max-width: var(--measure);
+  }
+
+  .hc-results > h2:focus {
+    outline: none;
+  }
+
+  .hc-area {
+    margin-block: var(--space-6);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .hc-area h3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+  }
+
+  .hc-area h4 {
+    margin: var(--space-4) 0 var(--space-2);
+    font-size: var(--text-base);
+  }
+
+  .hc-area ul,
+  .hc-area ol {
+    margin: 0;
+    padding-left: var(--space-6);
+  }
+
+  .hc-badge {
+    padding: 2px var(--space-3);
+    border-radius: var(--radius-pill);
+    font-family: var(--font-text);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0;
+  }
+
+  .hc-badge--needs_attention {
+    background: #fde8e6;
+    color: #8f1d14;
+  }
+
+  .hc-badge--forming {
+    background: var(--color-warning-soft);
+    color: #6b4600;
+  }
+
+  .hc-badge--insufficient_info {
+    background: var(--color-surface-muted);
+    color: var(--color-ink);
+  }
+
+  .hc-badge--established {
+    background: #e3f2e8;
+    color: #1d5e33;
+  }
+
+  .hc-answer {
+    color: var(--color-ink-muted);
+  }
+
+  .hc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-block: var(--space-6);
+  }
+
+  @media print {
+    .site-header,
+    .site-footer,
+    .skip-link,
+    .hc-intro,
+    .hc-form,
+    .hc-actions,
+    .hc-help {
+      display: none !important;
+    }
+
+    .hc,
+    .hc-results {
+      padding: 0;
+      max-width: none;
+    }
+
+    .hc-area {
+      break-inside: avoid;
+      border-color: #999;
+    }
+  }
+</style>

@@ -76,6 +76,8 @@ Aturan: rekomendasi **tidak** menjadi keputusan final tanpa persetujuan eksplisi
 | D-IMP-02 | 27 Okt 2026 | TypeScript 6.0.3 (dipilih npm sesuai peer dependency `@astrojs/check`), bukan 7.x | Menghindari ketidakcocokan typecheck | Naikkan saat `@astrojs/check` mendukung TS 7 |
 | D-IMP-03 | 27 Okt 2026 | Font Fraunces & Outfit di-*self-host* via Fontsource, bukan Google Fonts | Tanpa request ke pihak ketiga; CSP `font-src 'self'` | Ya |
 | D-IMP-04 | 27 Okt 2026 | CSP ketat (`script-src 'self'`, `style-src 'self'`) dengan `inlineStylesheets: 'never'`; satu-satunya script inline adalah JSON-LD (tidak dieksekusi, tidak diblokir CSP) | Keamanan dasar | Tinjau saat vendor analytics dipasang (Q-03) |
+| D-IMP-06 | 27 Okt 2026 | Tombol "Lanjut"/"Lihat hasil" tidak dinonaktifkan; validasi dijalankan saat diklik (ringkasan error + pesan per pernyataan + fokus ke pernyataan pertama yang kosong). Menggantikan bunyi AC 2 di blueprint §5.2 ("non-aktif sampai semua terjawab") | Tombol nonaktif tidak menjelaskan apa yang kurang dan sulit ditemukan pengguna keyboard/screen reader; tujuan AC 2 (tidak ada hasil dengan jawaban kosong) tetap terpenuhi | Ya |
+| D-IMP-07 | 27 Okt 2026 | Event `result_view` dikirim tanpa properti hasil (`areas_flagged_count`) | R-09 belum disetujui | Tambahkan bila R-09 disetujui |
 | D-IMP-05 | 27 Okt 2026 | Status "Relatif terbentuk" tetap berlaku bila satu jawaban "Tidak tahu" dan sisanya ≥ level 2 | Konsekuensi urutan aturan di blueprint §5.2; diuji di `evaluate.test.ts` | Ya, bila founder menginginkan aturan lain |
 
 ## 6. Riwayat perubahan
@@ -84,4 +86,5 @@ Aturan: rekomendasi **tidak** menjadi keputusan final tanpa persetujuan eksplisi
 |---|---|
 | 27 Okt 2026 | Dokumen dibuat dari audit awal |
 | 27 Okt 2026 | R-01, R-02, R-04 disetujui pengguna; Q-08 dan Q-09 ditambahkan; rencana implementasi P0 dibuat (`04_P0_IMPLEMENTATION_PLAN.md`) |
-| 27 Okt 2026 | M0–M2 selesai di `fansightful-web/` (belum di-commit, belum di-deploy); D-IMP-01 s.d. D-IMP-05 dicatat |
+| 27 Okt 2026 | M0–M2 selesai di `fansightful-web/` (commit `157f570`, belum di-deploy); D-IMP-01 s.d. D-IMP-05 dicatat |
+| 27 Okt 2026 | M3 selesai: `/tools-lab/` dan `/tools-lab/health-check/` (kuesioner bertahap, validasi, hasil, cetak, CTA bantuan); adapter analytics no-op; D-IMP-06 dan D-IMP-07 dicatat. Belum di-deploy |
