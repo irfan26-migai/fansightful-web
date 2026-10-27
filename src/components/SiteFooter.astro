@@ -1,16 +1,28 @@
 ---
+import Logo from './Logo.astro';
 import { id as t } from '../i18n/id';
 import { loadInsights } from '../lib/load-insights';
 import { isInsightsListed } from '../lib/insights';
 
+// Newsletter dan halaman topik ada di desain, tetapi belum tersedia — tidak ditampilkan.
 const showInsights = isInsightsListed((await loadInsights()).length);
-const links = [
-  { href: '/tools-lab/', label: t.nav.toolsLab },
-  ...(showInsights ? [{ href: '/insights/', label: t.nav.insights }] : []),
-  { href: '/solusi/', label: t.nav.solusi },
-  { href: '/tentang/', label: t.nav.tentang },
-  { href: '/kontak/', label: t.nav.kontak },
-  { href: '/privasi/', label: t.nav.privasi },
+const columns = [
+  {
+    title: t.footer.explore,
+    links: [
+      { href: '/tools-lab/', label: t.nav.toolsLab },
+      { href: '/tools-lab/health-check/', label: t.healthCheck.title },
+      ...(showInsights ? [{ href: '/insights/', label: t.nav.insights }] : []),
+    ],
+  },
+  {
+    title: t.site.name,
+    links: [
+      { href: '/tentang/', label: t.nav.tentang },
+      { href: '/solusi/', label: t.nav.solusi },
+      { href: '/kontak/', label: t.nav.kontak },
+    ],
+  },
 ];
 
 const year = new Date().getFullYear();
@@ -18,41 +30,114 @@ const year = new Date().getFullYear();
 
 <footer class="site-footer">
   <div class="container">
-    <nav aria-label={t.a11y.footerNav}>
-      <ul class="footer-nav">
-        {links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
-      </ul>
-    </nav>
-    <p class="footer-note">{t.footer.note}</p>
-    <p class="footer-note">© {year} {t.site.name}</p>
+    <div class="footer-top">
+      <div class="footer-about">
+        <a class="footer-brand" href="/" aria-label={t.a11y.home}><Logo tone="dark" /></a>
+        <p>{t.footer.about}</p>
+      </div>
+      <nav class="footer-cols" aria-label={t.a11y.footerNav}>
+        {
+          columns.map((col) => (
+            <div>
+              <p class="footer-col__title">{col.title}</p>
+              <ul>
+                {col.links.map((l) => (
+                  <li>
+                    <a href={l.href}>{l.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <p>© {year} {t.site.name}. {t.footer.note}</p>
+      <p><a href="/privasi/">{t.footer.privacy}</a></p>
+    </div>
   </div>
 </footer>
 
 <style>
   .site-footer {
     margin-top: var(--space-16);
-    padding-block: var(--space-8);
-    border-top: 1px solid var(--color-border);
-    background: var(--color-surface-muted);
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-10) var(--space-12);
+    padding-block: var(--space-16) var(--space-10);
+  }
+
+  .footer-about {
+    flex: 1 1 18rem;
+    max-width: 25rem;
+  }
+
+  .footer-brand {
+    text-decoration: none;
+  }
+
+  .footer-about p {
+    margin: var(--space-4) 0 0;
+    color: var(--color-on-navy-muted);
     font-size: var(--text-sm);
   }
 
-  .footer-nav {
+  .footer-cols {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-2) var(--space-6);
-    margin: 0 0 var(--space-4);
+    gap: var(--space-10);
+  }
+
+  .footer-col__title {
+    margin: 0 0 var(--space-3);
+    font-weight: 700;
+  }
+
+  .footer-cols ul {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .footer-nav a {
-    color: var(--color-ink);
+  .footer-cols a,
+  .footer-bottom a {
+    color: var(--color-on-navy-muted);
+    font-size: var(--text-sm);
+    text-decoration: none;
   }
 
-  .footer-note {
+  .footer-cols a:hover,
+  .footer-bottom a:hover {
+    color: var(--color-white);
+    text-decoration: underline;
+  }
+
+  .footer-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-6);
+    padding-block: var(--space-6) var(--space-8);
+    border-top: 1px solid #2a3a60;
+    color: #a9b3c7;
+    font-size: var(--text-xs);
+  }
+
+  .footer-bottom p {
+    margin: 0;
     max-width: var(--measure);
-    color: var(--color-ink-muted);
-    margin-bottom: var(--space-2);
+  }
+
+  .site-footer :focus-visible {
+    outline-color: var(--color-white);
   }
 </style>

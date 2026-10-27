@@ -106,3 +106,13 @@ export const STATEMENTS: Statement[] = [
   { id: 'E3', area: 'E', text: 'Penilaian kinerja mengacu pada target yang disepakati di awal periode.' },
   { id: 'E4', area: 'E', text: 'Kinerja yang kurang ditindaklanjuti dengan rencana perbaikan yang jelas.' },
 ];
+
+/**
+ * Profil bisnis (langkah pertama, opsional). Hanya ditampilkan kembali di ringkasan hasil; tidak memengaruhi
+ * penilaian dan tidak dikirim ke mana pun. Rentang, bukan angka persis, untuk meminimalkan data.
+ */
+export const PROFILE = {
+  types: ['Startup', 'UMKM', 'Manufaktur', 'Jasa profesional', 'Perusahaan keluarga', 'Agensi & kreatif', 'Lainnya'],
+  sizes: ['1–5', '6–20', '21–50', '51–100', 'Lebih dari 100'],
+  ages: ['Kurang dari 2 tahun', '2–5 tahun', '6–10 tahun', 'Lebih dari 10 tahun'],
+} as const;

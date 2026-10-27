@@ -23,6 +23,7 @@ const tools = [
       {
         tools.map((tool) => (
           <li class="tool-card">
+            <span class="pill pill--sample">{t.healthCheck.sampleBadge}</span>
             <h2>
               <a href={tool.href}>{tool.title}</a>
             </h2>
@@ -63,14 +64,19 @@ const tools = [
     padding: var(--space-6);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    background: var(--color-surface);
+    background: var(--color-white);
   }
 
   .tool-card:hover {
     border-color: var(--color-accent);
   }
 
+  .tool-card {
+    border-radius: var(--radius-card);
+  }
+
   .tool-card h2 {
+    margin-top: var(--space-3);
     font-size: var(--text-lg);
   }
 

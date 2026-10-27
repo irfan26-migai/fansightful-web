@@ -1,9 +1,10 @@
 ---
+import Logo from './Logo.astro';
 import { id as t } from '../i18n/id';
 import { loadInsights } from '../lib/load-insights';
 import { isInsightsListed } from '../lib/insights';
 
-// Insights baru tampil setelah cukup artikel; Playbooks belum ada (blueprint §3.2).
+// Insights baru tampil setelah cukup artikel; Playbooks dan pencarian belum ada (blueprint §3.2).
 const showInsights = isInsightsListed((await loadInsights()).length);
 const items = [
   { href: '/tools-lab/', label: t.nav.toolsLab },
@@ -18,8 +19,8 @@ const isCurrent = (href: string) => current === href || current.startsWith(href)
 
 <header class="site-header">
   <div class="container site-header__inner">
-    <a class="brand" href="/" aria-label={t.a11y.home}>Fan<em>sight</em>ful</a>
-    <nav aria-label={t.a11y.mainNav}>
+    <a class="brand" href="/" aria-label={t.a11y.home}><Logo /></a>
+    <nav class="site-nav" aria-label={t.a11y.mainNav}>
       <ul class="nav">
         {
           items.map((item) => (
@@ -30,71 +31,85 @@ const isCurrent = (href: string) => current === href || current.startsWith(href)
             </li>
           ))
         }
-        <li><a class="button button--secondary nav__cta" href="/kontak/">{t.nav.kontak}</a></li>
       </ul>
     </nav>
+    <a class="button header-cta" href="/tools-lab/health-check/">{t.nav.cta}</a>
   </div>
 </header>
 
 <style>
   .site-header {
     border-bottom: 1px solid var(--color-border);
-    background: var(--color-bg);
+    background: var(--color-white);
   }
 
+  /* Ponsel: logo + tombol di baris pertama, navigasi di baris kedua. Desktop: satu baris. */
   .site-header__inner {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      'brand cta'
+      'nav nav';
     align-items: center;
-    justify-content: space-between;
-    gap: var(--space-3) var(--space-6);
-    padding-block: var(--space-4);
+    gap: var(--space-2) var(--space-4);
+    padding-block: var(--space-3) var(--space-1);
   }
 
   .brand {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: var(--color-ink);
+    grid-area: brand;
+    justify-self: start;
     text-decoration: none;
-    letter-spacing: -0.01em;
   }
 
-  .brand em {
-    font-weight: 400;
+  .site-nav {
+    grid-area: nav;
+  }
+
+  .header-cta {
+    grid-area: cta;
+    min-height: 44px;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (min-width: 60rem) {
+    .site-header__inner {
+      grid-template-columns: auto 1fr auto;
+      grid-template-areas: 'brand nav cta';
+      gap: var(--space-8);
+      padding-block: var(--space-3);
+    }
+
+    .header-cta {
+      padding-inline: 1.25rem;
+    }
   }
 
   .nav {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2) var(--space-4);
+    gap: 0 var(--space-5);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  @media (min-width: 48rem) {
-    .nav {
-      column-gap: var(--space-6);
-    }
-  }
-
-  .nav a:not(.button) {
-    color: var(--color-ink);
+  .nav a {
+    display: inline-block;
+    padding-block: var(--space-3);
+    border-bottom: 2px solid transparent;
+    color: var(--color-navy);
+    font-size: var(--text-sm);
+    font-weight: 600;
     text-decoration: none;
-    font-weight: 500;
-    padding-block: var(--space-2);
   }
 
-  .nav a:not(.button):hover,
+  .nav a:hover {
+    color: var(--color-teal-text);
+  }
+
   .nav a[aria-current='page'] {
-    color: var(--color-accent);
-    text-decoration: underline;
-  }
-
-  .nav__cta {
-    min-height: 40px;
-    padding: var(--space-1) var(--space-4);
+    border-bottom-color: var(--color-teal);
+    color: var(--color-teal-text);
+    font-weight: 700;
   }
 </style>

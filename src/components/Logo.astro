@@ -1,0 +1,75 @@
+---
+// Konsep logo dari paket desain v2 — belum final (menunggu desainer). Teks "Fansightful" tetap teks asli.
+interface Props {
+  /** "dark" untuk latar navy (footer). */
+  tone?: 'light' | 'dark';
+}
+
+const { tone = 'light' } = Astro.props;
+---
+
+<span class:list={['logo', `logo--${tone}`]}>
+  <svg class="logo__mark" viewBox="0 0 34 34" width="34" height="34" aria-hidden="true" focusable="false">
+    <rect width="34" height="34" rx="9" class="logo__bg"></rect>
+    <path d="M9.5 24 L16.5 17 L24.5 10" class="logo__line" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.55"></path>
+    <circle cx="9.5" cy="24" r="2.8" class="logo__dot"></circle>
+    <circle cx="16.5" cy="17" r="2.8" class="logo__dot"></circle>
+    <circle cx="24.5" cy="10" r="3.6" class="logo__next"></circle>
+  </svg>
+  <span class="logo__word">Fansightful</span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .logo__mark {
+    flex: none;
+  }
+
+  .logo__word {
+    font-size: 1.3125rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1;
+  }
+
+  .logo__bg {
+    fill: var(--color-navy);
+  }
+
+  .logo__line {
+    stroke: var(--color-white);
+  }
+
+  .logo__dot {
+    fill: var(--color-white);
+  }
+
+  .logo__next {
+    fill: var(--color-action);
+  }
+
+  .logo--light {
+    color: var(--color-navy);
+  }
+
+  .logo--dark {
+    color: var(--color-white);
+  }
+
+  .logo--dark .logo__bg {
+    fill: var(--color-white);
+  }
+
+  .logo--dark .logo__line {
+    stroke: var(--color-navy);
+  }
+
+  .logo--dark .logo__dot {
+    fill: var(--color-navy);
+  }
+</style>

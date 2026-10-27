@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { evaluate, evaluateArea, statusFor, type Answers } from './evaluate';
+import { evaluate, evaluateArea, keyFindings, statusFor, type Answers } from './evaluate';
 import { AREAS, STATEMENTS, type Answer, type AreaId } from './instrument';
 
 const U = 'unknown' as const;
@@ -124,5 +124,23 @@ describe('integritas instrumen', () => {
   it('ID pernyataan unik', () => {
     const ids = STATEMENTS.map((s) => s.id);
     expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+describe('keyFindings', () => {
+  it('mengambil pemicu dari area prioritas lebih dulu, tanpa area "Belum cukup informasi"', () => {
+    const { areas } = evaluate(answersWith({ A: [U, U, 0, 3], C: [1, 3, 3, 3], E: [0, 0, 1, 3] }));
+    expect(keyFindings(areas)).toEqual([
+      { area: 'E', status: 'needs_attention', statement: 'E1' },
+      { area: 'E', status: 'needs_attention', statement: 'E2' },
+      { area: 'E', status: 'needs_attention', statement: 'E3' },
+      { area: 'C', status: 'forming', statement: 'C1' },
+    ]);
+  });
+
+  it('dibatasi sesuai `max` dan kosong bila semua area relatif terbentuk', () => {
+    const { areas } = evaluate(answersWith({ B: [0, 0, 0, 0] }));
+    expect(keyFindings(areas, 2)).toHaveLength(2);
+    expect(keyFindings(evaluate(answersWith()).areas)).toEqual([]);
   });
 });

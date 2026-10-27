@@ -1,0 +1,32 @@
+/* Salinan apa adanya dari fansightful-design-v2/design-tokens.css (paket desain v2, 27 Okt 2026). Ubah di sumbernya, lalu salin ulang. */
+:root {
+  --color-navy: #0E1B3D;
+  --color-teal: #0E8C7E;
+  --color-teal-text: #0B7A6E;
+  --color-teal-tint: #E3F5F2;
+  --color-action: #F0761F;
+  --color-action-tint: #FFF1E6;
+  --color-action-text: #A9500F;
+  --color-text-secondary: #45506A;
+  --color-text-tertiary: #5C667D;
+  --color-surface: #F6F8FB;
+  --color-line: #E3E7EE;
+  --color-white: #FFFFFF;
+  --domain-people-tint: #FDECF1;
+  --domain-people-icon: #C23B66;
+  --domain-people-text: #9E2B52;
+  --domain-ops-tint: #E8F0FE;
+  --domain-ops-icon: #2F6BE0;
+  --domain-ops-text: #1F4FAF;
+  --domain-fin-tint: #E6F6EE;
+  --domain-fin-icon: #1E8A57;
+  --domain-fin-text: #16693F;
+  --domain-tech-tint: #EFEAFD;
+  --domain-tech-icon: #6A4BD6;
+  --domain-tech-text: #5136B0;
+  --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --radius-button: 10px;
+  --radius-card: 18px;
+  --radius-panel: 24px;
+  --radius-pill: 999px;
+}

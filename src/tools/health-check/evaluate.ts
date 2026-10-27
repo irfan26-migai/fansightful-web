@@ -81,3 +81,17 @@ export function evaluate(answers: Answers, statements: Statement[] = STATEMENTS)
     flagged: areas.filter((a) => a.status === 'needs_attention').map((a) => a.area),
   };
 }
+
+export interface Finding {
+  area: AreaId;
+  status: AreaStatus;
+  statement: string;
+}
+
+/** Pernyataan pemicu dari area "Perlu perhatian" dan "Mulai terbentuk", mengikuti urutan prioritas. */
+export function keyFindings(areas: AreaResult[], max = 4): Finding[] {
+  return areas
+    .filter((a) => a.status === 'needs_attention' || a.status === 'forming')
+    .flatMap((a) => a.triggers.map((statement) => ({ area: a.area, status: a.status, statement })))
+    .slice(0, max);
+}

@@ -1,86 +1,175 @@
 ---
-import { AREAS, SCALE, STATEMENTS } from './instrument';
+import Icon from '../../components/Icon.astro';
+import { AREAS, PROFILE, SCALE, STATEMENTS } from './instrument';
 import { id as t } from '../../i18n/id';
 import { loadInsights } from '../../lib/load-insights';
 import { insightsByArea } from '../../lib/insights';
+import type { IconName } from '../../lib/icons';
 
 const c = t.healthCheck;
 // Tautan artikel per area untuk halaman hasil; diteruskan lewat atribut data (tanpa script inline, aman untuk CSP).
 const insights = insightsByArea(await loadInsights());
+
+// Langkah 0 = profil bisnis (opsional), lalu satu langkah per area.
+const stepper = [
+  { id: 'profile', title: c.profile.title, sub: c.profile.short },
+  ...AREAS.map((a) => ({ id: a.id, title: a.title, sub: c.statementsCount(STATEMENTS.filter((s) => s.area === a.id).length) })),
+];
+const why: Record<string, string> = { profile: c.profile.why, ...Object.fromEntries(AREAS.map((a) => [a.id, a.why])) };
+const metaIcons: IconName[] = ['clock', 'list', 'bolt', 'send'];
 ---
 
-<div class="hc" data-hc data-hc-insights={JSON.stringify(insights)}>
-  <section class="hc-intro" data-hc-intro aria-labelledby="hc-title">
-    <p class="eyebrow">Tools Lab</p>
-    <h1 id="hc-title">{c.title}</h1>
-    <p class="lead prose">{c.summary}</p>
-    <ul class="hc-facts">
-      {c.facts.map((f) => <li>{f}</li>)}
-    </ul>
+<div class="hc" data-hc data-hc-insights={JSON.stringify(insights)} data-hc-why={JSON.stringify(why)}>
+  <div class="container hc-top" data-hc-top>
+    <nav class="crumbs" aria-label={c.breadcrumb}>
+      <a href="/tools-lab/">Tools Lab</a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{c.title}</span>
+    </nav>
 
-    <div class="hc-intro__grid">
-      <div>
-        <h2>{c.whatTitle}</h2>
-        <ul>
-          {AREAS.map((a) => <li>{a.title}</li>)}
-        </ul>
-      </div>
-      <div>
-        <h2>{c.whoTitle}</h2>
-        <p>{c.who}</p>
-      </div>
-    </div>
-
-    <aside class="callout" aria-labelledby="hc-limits">
-      <h2 id="hc-limits">{c.limitsTitle}</h2>
-      <ul>
-        {c.limits.map((l) => <li>{l}</li>)}
-      </ul>
-    </aside>
-
-    <button class="button hc-start" type="button" data-hc-start hidden>{c.start}</button>
-    <noscript><p class="callout callout--warning">{c.noscript}</p></noscript>
-  </section>
-
-  <form class="hc-form" data-hc-form novalidate aria-labelledby="hc-title">
-    <p class="hc-instruction">{c.instruction}</p>
-    <div class="hc-error" data-hc-error role="alert"></div>
-
-    {
-      AREAS.map((area, i) => (
-        <section class="hc-step" data-hc-step={area.id} aria-labelledby={`hc-step-${area.id}`}>
-          <p class="hc-progress">
-            <span>{c.stepLabel(i + 1, AREAS.length)}</span>
-            <progress max={AREAS.length} value={i + 1} aria-hidden="true" />
+    <header class="hc-head">
+      <div class="hc-head__main">
+        <span class="tile hc-head__tile"><Icon name="pulse" /></span>
+        <div>
+          <p class="hc-head__pills">
+            <span class="pill pill--people">{c.domain}</span>
+            <span class="pill pill--sample">{c.sampleBadge}</span>
           </p>
-          <h2 id={`hc-step-${area.id}`} tabindex="-1">{area.title}</h2>
-          {STATEMENTS.filter((s) => s.area === area.id).map((s) => (
-            <fieldset class="hc-q" data-hc-q={s.id} aria-describedby={`err-${s.id}`}>
-              <legend>{s.text}</legend>
-              <div class="hc-options">
-                {SCALE.map((opt) => (
-                  <label class="hc-option">
-                    <input type="radio" name={s.id} value={String(opt.value)} required />
-                    <span>{opt.label}</span>
-                  </label>
-                ))}
+          <h1 id="hc-title">{c.title}</h1>
+          <p class="hc-head__lede">{c.lede}</p>
+        </div>
+      </div>
+      <ul class="hc-meta">
+        {
+          c.meta.map((m, i) => (
+            <li>
+              <Icon name={metaIcons[i]} />
+              {m}
+            </li>
+          ))
+        }
+      </ul>
+    </header>
+
+    <aside class="sample-note" aria-labelledby="hc-sample-title">
+      <Icon name="info" />
+      <p><strong id="hc-sample-title">{c.sampleTitle}.</strong> {c.sampleBody}</p>
+    </aside>
+  </div>
+
+  <div class="hc-stage">
+    <div class="container hc-layout" data-hc-layout>
+      <ol class="hc-stepper" data-hc-stepper aria-label={c.stepsLabel} hidden>
+        {
+          stepper.map((s, i) => (
+            <li data-hc-stepper-item={s.id}>
+              <span class="hc-stepper__dot" aria-hidden="true">
+                <span class="hc-stepper__num">{i + 1}</span>
+                <Icon name="check" />
+              </span>
+              <span>
+                <span class="hc-stepper__title">{s.title}</span>
+                <span class="hc-stepper__sub">{s.sub}</span>
+              </span>
+            </li>
+          ))
+        }
+      </ol>
+
+      <form class="hc-card" data-hc-form novalidate aria-labelledby="hc-title">
+        <div class="hc-progress" data-hc-progress hidden>
+          <p><span data-hc-progress-label></span><span data-hc-progress-pct></span></p>
+          <div class="hc-progress__track" aria-hidden="true"><div class="hc-progress__bar" data-hc-progress-bar></div></div>
+        </div>
+        <noscript><p class="hc-noscript">{c.noscript}</p></noscript>
+        <div class="hc-error" data-hc-error role="alert"></div>
+
+        <section class="hc-step" data-hc-step="profile" aria-labelledby="hc-step-profile">
+          <h2 id="hc-step-profile" tabindex="-1">{c.profile.heading}</h2>
+          <p class="hc-step__intro">{c.profile.intro}</p>
+          <div class="hc-fields">
+            <div class="hc-field">
+              <label for="hc-type">{c.profile.type}</label>
+              <select id="hc-type" name="profile_type">
+                <option value="">{c.profile.choose}</option>
+                {PROFILE.types.map((v) => <option value={v}>{v}</option>)}
+              </select>
+            </div>
+            <fieldset class="hc-field">
+              <legend>{c.profile.size}</legend>
+              <div class="hc-chips">
+                {
+                  PROFILE.sizes.map((v) => (
+                    <label class="hc-chip">
+                      <input type="radio" name="profile_size" value={v} />
+                      <span>{v}</span>
+                    </label>
+                  ))
+                }
               </div>
-              <p class="hc-field-error" id={`err-${s.id}`} hidden>
-                {c.errorField}
-              </p>
             </fieldset>
-          ))}
+            <div class="hc-field">
+              <label for="hc-age">{c.profile.age}</label>
+              <select id="hc-age" name="profile_age">
+                <option value="">{c.profile.choose}</option>
+                {PROFILE.ages.map((v) => <option value={v}>{v}</option>)}
+              </select>
+            </div>
+          </div>
         </section>
-      ))
-    }
 
-    <div class="hc-nav" data-hc-nav hidden>
-      <button class="button button--secondary" type="button" data-hc-back>{c.back}</button>
-      <button class="button" type="button" data-hc-next>{c.next}</button>
+        {
+          AREAS.map((area) => (
+            <section class="hc-step" data-hc-step={area.id} aria-labelledby={`hc-step-${area.id}`}>
+              <h2 id={`hc-step-${area.id}`} tabindex="-1">
+                {area.title}
+              </h2>
+              <p class="hc-step__intro">{c.instruction}</p>
+              {STATEMENTS.filter((s) => s.area === area.id).map((s) => (
+                <fieldset class="hc-q" data-hc-q={s.id} aria-describedby={`err-${s.id}`}>
+                  <legend>{s.text}</legend>
+                  <div class="hc-options">
+                    {SCALE.map((opt) => (
+                      <label class="hc-option">
+                        <input type="radio" name={s.id} value={String(opt.value)} required />
+                        <span>{opt.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                  <p class="hc-field-error" id={`err-${s.id}`} hidden>
+                    {c.errorField}
+                  </p>
+                </fieldset>
+              ))}
+            </section>
+          ))
+        }
+
+        <div class="hc-nav" data-hc-nav hidden>
+          <button class="hc-back" type="button" data-hc-back><Icon name="back" /> {c.back}</button>
+          <button class="button" type="button" data-hc-next>
+            <span data-hc-next-label>{c.next}</span>
+            <Icon name="arrow" />
+          </button>
+        </div>
+      </form>
+
+      <aside class="hc-aside">
+        <div class="hc-aside__card">
+          <span class="tile tile--sm"><Icon name="lightbulb" /></span>
+          <h2>{c.whyAsideTitle}</h2>
+          <p data-hc-why-text>{c.profile.why}</p>
+        </div>
+        <div class="hc-aside__card hc-aside__card--teal">
+          <span class="hc-aside__icon"><Icon name="shield" /></span>
+          <h2>{c.privacyTitle}</h2>
+          <p>{c.privacyBody}</p>
+        </div>
+      </aside>
     </div>
-  </form>
 
-  <section class="hc-results" data-hc-results aria-live="polite" hidden></section>
+    <section class="hc-results" data-hc-results aria-live="polite" hidden></section>
+  </div>
 </div>
 
 <script>
@@ -90,104 +179,450 @@ const insights = insightsByArea(await loadInsights());
 </script>
 
 <style is:global>
-  .hc {
-    padding-block: var(--space-12) var(--space-8);
+  .hc svg {
+    flex: none;
   }
 
-  .hc-facts {
+  .hc-top {
+    padding-block: var(--space-6) var(--space-8);
+  }
+
+  .crumbs {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-2);
-    margin: 0 0 var(--space-8);
+    font-size: var(--text-sm);
+  }
+
+  .crumbs a {
+    color: var(--color-text-tertiary);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .crumbs a:hover {
+    color: var(--color-navy);
+    text-decoration: underline;
+  }
+
+  .crumbs [aria-current] {
+    font-weight: 700;
+  }
+
+  .crumbs span[aria-hidden] {
+    color: var(--color-text-tertiary);
+  }
+
+  .hc-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--space-8);
+    margin-top: var(--space-6);
+  }
+
+  .hc-head__main {
+    display: flex;
+    flex: 1 1 34rem;
+    align-items: flex-start;
+    gap: var(--space-5);
+  }
+
+  .hc-head__tile {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 16px;
+  }
+
+  .hc-head__tile svg {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  @media (max-width: 40rem) {
+    .hc-head__tile {
+      display: none;
+    }
+  }
+
+  .hc-head__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin: 0;
+  }
+
+  .hc-head h1 {
+    margin: var(--space-3) 0 0;
+  }
+
+  .hc-head__lede {
+    max-width: 36em;
+    margin: var(--space-3) 0 0;
+    color: var(--color-ink-muted);
+  }
+
+  .hc-meta {
+    display: grid;
+    flex: 0 1 16rem;
+    gap: var(--space-3);
+    margin: 0;
+    padding: var(--space-5) var(--space-6);
+    border-radius: 16px;
+    background: var(--color-surface);
+    list-style: none;
+  }
+
+  .hc-meta li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .hc-meta svg {
+    width: 1.125rem;
+    height: 1.125rem;
+    color: var(--color-teal);
+  }
+
+  .sample-note {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+    max-width: 52rem;
+    margin-top: var(--space-6);
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-button);
+    background: var(--color-warning-soft);
+    color: var(--color-warning-text);
+    font-size: var(--text-sm);
+  }
+
+  .sample-note svg {
+    margin-top: 0.15rem;
+  }
+
+  .sample-note p {
+    margin: 0;
+  }
+
+  .hc-stage {
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .hc-layout {
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+    padding-block: var(--space-10) var(--space-16);
+  }
+
+  @media (min-width: 56rem) {
+    .hc-layout {
+      grid-template-columns: minmax(0, 1fr) 17rem;
+    }
+
+    .hc-stepper {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (min-width: 76rem) {
+    .hc-layout {
+      grid-template-columns: 15rem minmax(0, 1fr) 17rem;
+      gap: var(--space-8);
+    }
+
+    .hc-stepper {
+      grid-column: auto;
+    }
+  }
+
+  .hc-layout[hidden],
+  .hc-top[hidden] {
+    display: none;
+  }
+
+  /* Stepper: vertikal di desktop lebar, ringkas (hanya angka) di layar sempit. */
+  .hc-stepper {
+    display: flex;
+    gap: var(--space-2);
+    margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .hc-facts li {
-    padding: var(--space-1) var(--space-3);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-pill);
-    background: var(--color-surface);
-    font-size: var(--text-sm);
+  .hc-stepper li {
+    display: flex;
+    gap: var(--space-3);
   }
 
-  .hc-intro__grid {
-    display: grid;
-    gap: var(--space-6);
-    margin-bottom: var(--space-6);
+  /* Layar sempit: hanya angka; judul tetap terbaca pembaca layar. */
+  .hc-stepper li > span:last-child {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
   }
 
-  @media (min-width: 48rem) {
-    .hc-intro__grid {
-      grid-template-columns: 1fr 1fr;
+  @media (min-width: 76rem) {
+    .hc-stepper {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .hc-stepper li {
+      position: relative;
+      padding-bottom: var(--space-5);
+    }
+
+    .hc-stepper li:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 0.9rem;
+      top: 2.1rem;
+      bottom: 0.3rem;
+      width: 2px;
+      background: var(--color-line);
+    }
+
+    .hc-stepper li[data-done]::before {
+      background: var(--color-teal);
+    }
+
+    .hc-stepper li > span:last-child {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip: auto;
+      white-space: normal;
+      padding-top: 0.2rem;
     }
   }
 
-  .hc-intro h2,
-  .callout h2 {
-    font-size: var(--text-lg);
-  }
-
-  .callout {
-    max-width: var(--measure);
-    margin-block: var(--space-6);
-    padding: var(--space-4) var(--space-6);
-    border-left: 4px solid var(--color-accent);
-    border-radius: var(--radius);
-    background: var(--color-accent-soft);
-  }
-
-  .callout ul {
-    margin: 0;
-    padding-left: var(--space-6);
-  }
-
-  .callout--warning {
-    border-left-color: #8a5a00;
-    background: var(--color-warning-soft);
-  }
-
-  .hc-form {
-    max-width: var(--measure);
-    margin-top: var(--space-8);
-  }
-
-  .hc-instruction {
-    color: var(--color-ink-muted);
-  }
-
-  .hc-progress {
+  .hc-stepper__dot {
     display: flex;
+    flex: none;
     align-items: center;
-    gap: var(--space-3);
-    margin-bottom: var(--space-2);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--color-accent);
+    justify-content: center;
+    width: 1.875rem;
+    height: 1.875rem;
+    border: 1.5px solid var(--color-border-strong);
+    border-radius: 50%;
+    background: var(--color-white);
+    color: var(--color-text-tertiary);
+    font-size: var(--text-xs);
+    font-weight: 700;
   }
 
-  .hc-progress progress {
-    flex: 1;
-    max-width: 12rem;
+  .hc-stepper__dot svg {
+    display: none;
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .hc-stepper li[data-done] .hc-stepper__dot {
+    border-color: var(--color-teal);
+    background: var(--color-teal-tint);
+    color: var(--color-teal-text);
+  }
+
+  .hc-stepper li[data-done] .hc-stepper__num {
+    display: none;
+  }
+
+  .hc-stepper li[data-done] .hc-stepper__dot svg {
+    display: block;
+  }
+
+  .hc-stepper li[aria-current='step'] .hc-stepper__dot {
+    border-color: var(--color-teal);
+    background: var(--color-teal);
+    color: var(--color-white);
+  }
+
+  .hc-stepper__title,
+  .hc-stepper__sub {
+    display: block;
+  }
+
+  .hc-stepper__title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    line-height: 1.35;
+  }
+
+  .hc-stepper li[aria-current='step'] .hc-stepper__title {
+    font-weight: 800;
+  }
+
+  .hc-stepper__sub {
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .hc-card {
+    min-width: 0;
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-white);
+  }
+
+  @media (min-width: 48rem) {
+    .hc-card {
+      padding: var(--space-8);
+    }
+  }
+
+  .hc-progress p {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 0 var(--space-2);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+  }
+
+  .hc-progress__track {
     height: 6px;
-    accent-color: var(--color-accent);
+    border-radius: 3px;
+    background: var(--color-line);
+  }
+
+  .hc-progress__bar {
+    width: 0;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--color-teal);
+    transition: width 0.2s ease;
+  }
+
+  .hc-noscript {
+    color: var(--color-warning-text);
+    font-weight: 600;
+  }
+
+  .hc-step + .hc-step {
+    margin-top: var(--space-10);
+  }
+
+  .hc-step[hidden] + .hc-step,
+  .hc-step + .hc-step[hidden] {
+    margin-top: 0;
+  }
+
+  .hc-step h2 {
+    margin: var(--space-6) 0 0;
+    font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem);
   }
 
   .hc-step h2:focus {
     outline: none;
   }
 
+  .hc-step__intro {
+    margin: var(--space-2) 0 var(--space-6);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .hc-fields {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  .hc-field {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .hc-field > label,
+  .hc-field legend {
+    padding: 0;
+    margin-bottom: var(--space-2);
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .hc-field select {
+    width: 100%;
+    min-height: 48px;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-button);
+    background: var(--color-white);
+    color: var(--color-navy);
+    font: inherit;
+    font-size: var(--text-sm);
+  }
+
+  .hc-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  .hc-chip {
+    position: relative;
+    cursor: pointer;
+  }
+
+  .hc-chip input {
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    margin: 0;
+    cursor: pointer;
+  }
+
+  .hc-chip span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 1.125rem;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-button);
+    font-size: var(--text-sm);
+    font-weight: 700;
+  }
+
+  .hc-chip:hover span {
+    border-color: var(--color-navy);
+  }
+
+  .hc-chip input:checked + span {
+    border: 2px solid var(--color-teal);
+    background: var(--color-teal-tint);
+    color: var(--color-teal-text);
+  }
+
+  .hc-chip input:focus-visible + span {
+    outline: 3px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
   .hc-q {
-    margin: 0 0 var(--space-6);
-    padding: var(--space-4);
+    margin: 0 0 var(--space-4);
+    padding: var(--space-5);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    background: var(--color-surface);
+    border-radius: 14px;
   }
 
   .hc-q[aria-invalid='true'] {
-    border-color: #b42318;
-    box-shadow: 0 0 0 1px #b42318;
+    border-color: var(--color-danger);
+    box-shadow: 0 0 0 1px var(--color-danger);
   }
 
   .hc-q legend {
@@ -195,13 +630,19 @@ const insights = insightsByArea(await loadInsights());
     width: 100%;
     margin-bottom: var(--space-3);
     padding: 0;
-    font-weight: 500;
+    font-weight: 700;
   }
 
   .hc-options {
     clear: both;
     display: grid;
     gap: var(--space-2);
+  }
+
+  @media (min-width: 40rem) {
+    .hc-options {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   .hc-option {
@@ -211,30 +652,36 @@ const insights = insightsByArea(await loadInsights());
     min-height: 44px;
     padding: var(--space-2) var(--space-3);
     border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    border-radius: var(--radius-button);
+    font-size: var(--text-sm);
     cursor: pointer;
   }
 
   .hc-option:hover {
-    border-color: var(--color-accent);
+    border-color: var(--color-teal);
   }
 
   .hc-option:has(input:checked) {
-    border-color: var(--color-accent);
-    background: var(--color-accent-soft);
+    border-color: var(--color-teal);
+    background: var(--color-teal-tint);
+    font-weight: 600;
   }
 
   .hc-option input {
     width: 1.15rem;
     height: 1.15rem;
     margin: 0;
-    accent-color: var(--color-accent);
+    accent-color: var(--color-teal-text);
   }
 
   .hc-field-error,
   .hc-error:not(:empty) {
-    color: #b42318;
-    font-weight: 500;
+    color: var(--color-danger);
+    font-weight: 600;
+  }
+
+  .hc-error:not(:empty) {
+    margin-top: var(--space-4);
   }
 
   .hc-field-error {
@@ -245,51 +692,247 @@ const insights = insightsByArea(await loadInsights());
   .hc-nav {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: 1px solid var(--color-border);
   }
+
+  .hc-nav .button {
+    margin-left: auto;
+  }
+
+  .hc-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 44px;
+    padding: var(--space-2) var(--space-1);
+    border: 0;
+    background: none;
+    color: var(--color-navy);
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .hc-back[hidden] {
+    display: none;
+  }
+
+  .hc-back:hover {
+    text-decoration: underline;
+  }
+
+  .hc-back svg,
+  .hc-nav .button svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .hc-aside {
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .hc-aside__card {
+    padding: var(--space-5) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-white);
+  }
+
+  .hc-aside__card--teal {
+    border-color: var(--color-teal-tint);
+    background: var(--color-teal-tint);
+  }
+
+  .hc-aside__icon {
+    display: inline-flex;
+    color: var(--color-teal-text);
+  }
+
+  .hc-aside__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .hc-aside h2 {
+    margin: var(--space-3) 0 0;
+    font-size: var(--text-base);
+    letter-spacing: 0;
+  }
+
+  .hc-aside p {
+    margin: var(--space-2) 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  /* ---------- Hasil ---------- */
 
   .hc-results {
-    max-width: var(--measure);
+    padding-block: 0 var(--space-16);
   }
 
-  .hc-results > h2:focus {
+  .hc-results__headwrap {
+    padding-top: var(--space-6);
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-white);
+  }
+
+  .hc-res-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+    padding-bottom: var(--space-8);
+  }
+
+  .hc-res-head > div:first-child {
+    flex: 1 1 32rem;
+  }
+
+  .hc-res-head h1 {
+    margin: var(--space-4) 0 0;
+  }
+
+  .hc-res-head h1:focus {
     outline: none;
   }
 
-  .hc-area {
-    margin-block: var(--space-6);
-    padding: var(--space-6);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    background: var(--color-surface);
+  .hc-res-context {
+    margin: var(--space-3) 0 0;
+    color: var(--color-ink-muted);
   }
 
-  .hc-area h3 {
+  .hc-res-actions {
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-2) var(--space-3);
+    gap: var(--space-3);
   }
 
-  .hc-area h4 {
-    margin: var(--space-4) 0 var(--space-2);
-    font-size: var(--text-base);
+  .hc-res-body {
+    display: grid;
+    gap: var(--space-6);
+    padding-top: var(--space-10);
   }
 
-  .hc-area ul,
-  .hc-area ol {
+  .hc-panel {
+    min-width: 0;
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 20px;
+    background: var(--color-white);
+  }
+
+  @media (min-width: 48rem) {
+    .hc-panel {
+      padding: var(--space-8);
+    }
+  }
+
+  .hc-panel h2 {
     margin: 0;
-    padding-left: var(--space-6);
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+  }
+
+  .hc-panel__note {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .hc-overview {
+    display: grid;
+    gap: var(--space-8);
+  }
+
+  @media (min-width: 60rem) {
+    .hc-overview {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: var(--space-10);
+    }
+  }
+
+  .hc-overview__count {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-3);
+    margin: var(--space-2) 0 0;
+    font-weight: 800;
+  }
+
+  .hc-overview__count strong {
+    font-size: 3rem;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-navy);
+  }
+
+  .hc-overview__count span {
+    font-size: var(--text-base);
+    color: var(--color-teal-text);
+  }
+
+  .hc-overview__text {
+    margin: var(--space-4) 0 0;
+    color: var(--color-ink-muted);
+  }
+
+  .hc-overview__text + .hc-overview__text {
+    margin-top: var(--space-2);
+  }
+
+  .hc-area-list {
+    display: grid;
+    gap: var(--space-2);
+    margin: var(--space-4) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hc-area-list a {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--space-1) var(--space-3);
+    align-items: center;
+    padding: var(--space-3) var(--space-4);
+    border-radius: var(--radius-button);
+    background: var(--color-surface);
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  .hc-area-list a:hover {
+    background: var(--color-teal-tint);
+  }
+
+  .hc-area-list__name {
+    font-weight: 700;
+  }
+
+  .hc-area-list__detail {
+    grid-column: 1 / -1;
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
   }
 
   .hc-badge {
-    padding: 2px var(--space-3);
+    justify-self: end;
+    padding: 0.125rem 0.625rem;
     border-radius: var(--radius-pill);
     font-family: var(--font-text);
-    font-size: var(--text-sm);
-    font-weight: 600;
+    font-size: var(--text-xs);
+    font-weight: 700;
     letter-spacing: 0;
+    white-space: nowrap;
   }
 
   .hc-badge--needs_attention {
@@ -299,55 +942,316 @@ const insights = insightsByArea(await loadInsights());
 
   .hc-badge--forming {
     background: var(--color-warning-soft);
-    color: #6b4600;
+    color: var(--color-warning-text);
   }
 
   .hc-badge--insufficient_info {
-    background: var(--color-surface-muted);
-    color: var(--color-ink);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    box-shadow: inset 0 0 0 1px var(--color-line);
   }
 
   .hc-badge--established {
-    background: #e3f2e8;
-    color: #1d5e33;
+    background: var(--color-teal-tint);
+    color: var(--color-teal-text);
+  }
+
+  .hc-pair {
+    display: grid;
+    gap: var(--space-6);
+  }
+
+  @media (min-width: 60rem) {
+    .hc-pair {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .hc-findings {
+    display: grid;
+    gap: var(--space-4);
+    margin: var(--space-5) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .hc-findings li {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-3);
+  }
+
+  .hc-findings p {
+    margin: 0.35rem 0 0;
+    font-size: var(--text-sm);
+  }
+
+  .hc-findings small {
+    display: block;
+    margin-top: var(--space-1);
+    font-size: var(--text-xs);
+    color: var(--color-text-tertiary);
+  }
+
+  .tile--needs_attention {
+    background: #fde8e6;
+    color: #b42318;
+  }
+
+  .tile--forming {
+    background: var(--color-warning-soft);
+    color: #8a5a00;
+  }
+
+  .tile--muted {
+    background: var(--color-surface);
+    color: var(--color-text-tertiary);
+  }
+
+  .tile--established {
+    background: var(--color-teal-tint);
+    color: var(--color-teal);
+  }
+
+  .hc-next {
+    border-color: #f6c7a3;
+  }
+
+  .hc-next ol,
+  .hc-next > p {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-sm);
+  }
+
+  .hc-next ol {
+    display: grid;
+    gap: var(--space-2);
+    padding-left: var(--space-5);
+  }
+
+  .hc-resources {
+    display: grid;
+    gap: var(--space-3);
+    margin-top: var(--space-5);
+  }
+
+  .hc-resource {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    color: var(--color-navy);
+    text-decoration: none;
+  }
+
+  a.hc-resource {
+    border: 1.5px solid #f6c7a3;
+  }
+
+  a.hc-resource:hover {
+    background: var(--color-action-tint);
+  }
+
+  .hc-resource > span:nth-child(2) {
+    flex: 1;
+  }
+
+  .hc-resource__kind {
+    display: block;
+    font-size: var(--text-xs);
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+  }
+
+  a.hc-resource .hc-resource__kind {
+    color: var(--color-action-text);
+  }
+
+  .hc-resource__title {
+    display: block;
+    margin-top: 0.125rem;
+    font-size: var(--text-sm);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .hc-resource > svg {
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+
+  .hc-next .arrow-link {
+    margin-top: var(--space-3);
+    font-size: var(--text-sm);
+  }
+
+  .hc-detail > h2 {
+    margin: var(--space-4) 0 0;
+    font-size: var(--text-xl);
+  }
+
+  .hc-area {
+    scroll-margin-top: var(--space-6);
+    margin-top: var(--space-4);
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-white);
+  }
+
+  .hc-area h3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    margin: 0;
+  }
+
+  .hc-area h4 {
+    margin: var(--space-5) 0 var(--space-2);
+    font-size: var(--text-sm);
+    letter-spacing: 0;
+  }
+
+  .hc-area p,
+  .hc-area li {
+    font-size: var(--text-sm);
+  }
+
+  .hc-area p {
+    margin: 0;
+  }
+
+  .hc-area ul,
+  .hc-area ol {
+    display: grid;
+    gap: var(--space-1);
+    margin: 0;
+    padding-left: var(--space-5);
   }
 
   .hc-answer {
-    color: var(--color-ink-muted);
+    color: var(--color-text-tertiary);
   }
 
   .hc-article {
-    margin: var(--space-4) 0 0;
-    font-weight: 500;
+    margin-top: var(--space-4) !important;
+    font-weight: 600;
   }
 
-  .hc-actions {
+  .hc-how {
+    padding: var(--space-1) var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: 16px;
+    background: var(--color-white);
+  }
+
+  .hc-how summary {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 52px;
+    font-size: var(--text-sm);
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  .hc-how summary svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-teal);
+  }
+
+  .hc-how ul {
+    display: grid;
+    gap: var(--space-2);
+    margin: 0 0 var(--space-5);
+    padding-left: var(--space-5);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+
+  .hc-help {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-3);
-    margin-block: var(--space-6);
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-5);
+    padding: var(--space-6) var(--space-8);
+    border-radius: 20px;
+    background: var(--color-navy);
+    color: var(--color-white);
+  }
+
+  .hc-help > div {
+    display: flex;
+    flex: 1 1 26rem;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .hc-help h2 {
+    margin: 0;
+    font-size: var(--text-lg);
+    letter-spacing: -0.01em;
+  }
+
+  .hc-help p {
+    margin: var(--space-1) 0 0;
+    font-size: var(--text-sm);
+    color: var(--color-on-navy-muted);
+  }
+
+  .hc-help :focus-visible {
+    outline-color: var(--color-white);
+  }
+
+  .hc-help-quiet {
+    margin: 0;
+    font-size: var(--text-sm);
   }
 
   @media print {
     .site-header,
     .site-footer,
     .skip-link,
-    .hc-intro,
-    .hc-form,
-    .hc-actions,
-    .hc-help {
+    .hc-top,
+    .hc-layout,
+    .hc-res-actions,
+    .hc-help,
+    .hc-help-quiet,
+    .crumbs,
+    .hc-resources,
+    .hc-next .arrow-link {
       display: none !important;
     }
 
-    .hc,
-    .hc-results {
-      padding: 0;
-      max-width: none;
+    .hc-stage,
+    .hc-results__headwrap {
+      border: 0;
+      background: none;
     }
 
+    .hc-results,
+    .hc-res-body,
+    .hc-res-head {
+      padding: 0;
+    }
+
+    .hc-res-head h1 {
+      font-size: 1.5rem;
+    }
+
+    .hc-panel,
     .hc-area {
       break-inside: avoid;
       border-color: #999;
+    }
+
+    .hc-how ul {
+      display: grid !important;
     }
   }
 </style>
