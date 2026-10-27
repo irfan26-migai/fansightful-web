@@ -3,9 +3,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Pending from '../components/Pending.astro';
 import { FOUNDER } from '../config';
 import { id as t } from '../i18n/id';
+import { loadInsights } from '../lib/load-insights';
+import { insightHref, isInsightsListed } from '../lib/insights';
 
-// Struktur mengikuti blueprint §4. Section "Insights terbaru" ditambahkan di M5 dan hanya
-// tampil bila sudah ada minimal 3 artikel.
+// Struktur mengikuti blueprint §4. Section "Insights terbaru" hanya tampil bila sudah ada minimal 3 artikel.
+const insights = await loadInsights();
+const latest = isInsightsListed(insights.length) ? insights.slice(0, 3) : [];
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -91,6 +94,27 @@ const steps = [
     </ol>
     <p class="prose note">Hasilnya adalah pemeriksaan awal, bukan penilaian definitif.</p>
   </section>
+
+  {
+    latest.length > 0 && (
+      <section class="container section" aria-labelledby="latest-title">
+        <h2 id="latest-title">{t.insights.latest}</h2>
+        <ul class="cards cards--3">
+          {latest.map((i) => (
+            <li class="card">
+              <h3>
+                <a href={insightHref(i.slug)}>{i.title}</a>
+              </h3>
+              <p>{i.entry.data.description}</p>
+            </li>
+          ))}
+        </ul>
+        <p class="note">
+          <a href="/insights/">{t.insights.all}</a>
+        </p>
+      </section>
+    )
+  }
 
   <section class="container section" aria-labelledby="curator-title">
     <h2 id="curator-title">Dikurasi oleh</h2>

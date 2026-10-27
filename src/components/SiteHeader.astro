@@ -1,9 +1,13 @@
 ---
 import { id as t } from '../i18n/id';
+import { loadInsights } from '../lib/load-insights';
+import { isInsightsListed } from '../lib/insights';
 
-// Insights dan Playbooks belum tampil di navigasi sampai kontennya ada (blueprint §3.2).
+// Insights baru tampil setelah cukup artikel; Playbooks belum ada (blueprint §3.2).
+const showInsights = isInsightsListed((await loadInsights()).length);
 const items = [
   { href: '/tools-lab/', label: t.nav.toolsLab },
+  ...(showInsights ? [{ href: '/insights/', label: t.nav.insights }] : []),
   { href: '/solusi/', label: t.nav.solusi },
   { href: '/tentang/', label: t.nav.tentang },
 ];

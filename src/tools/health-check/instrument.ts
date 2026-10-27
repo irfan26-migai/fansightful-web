@@ -21,9 +21,8 @@ export interface Area {
   why: string;
   /** 1–3 langkah konkret untuk area berstatus "Perlu perhatian" atau "Mulai terbentuk". */
   nextActions: string[];
-  /** Slug artikel Insights terkait; tautan hanya ditampilkan bila artikelnya sudah terbit. */
-  relatedInsight?: string;
 }
+// Artikel terkait tidak ditulis di sini: diambil dari frontmatter `areas` artikel Insights (src/lib/insights.ts).
 
 export const SCALE: { value: Answer; label: string }[] = [
   { value: 0, label: 'Belum ada' },

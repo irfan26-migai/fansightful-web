@@ -5,6 +5,7 @@ import { evaluate, type Answers, type AreaResult } from './evaluate';
 import { AREAS, SCALE, STATEMENTS, type Answer } from './instrument';
 import { id as t } from '../../i18n/id';
 import { durationBucket, track } from '../../lib/analytics';
+import type { InsightLink } from '../../lib/insights';
 
 const c = t.healthCheck;
 const TOOL = 'health-check' as const;
@@ -37,6 +38,8 @@ export function initHealthCheck(root: HTMLElement): void {
   const nextBtn = root.querySelector<HTMLButtonElement>('[data-hc-next]')!;
   const errorBox = root.querySelector<HTMLElement>('[data-hc-error]')!;
   const results = root.querySelector<HTMLElement>('[data-hc-results]')!;
+
+  const insights: Partial<Record<string, InsightLink>> = JSON.parse(root.dataset.hcInsights || '{}');
 
   let current = 0;
   let startedAt = 0;
@@ -127,7 +130,7 @@ export function initHealthCheck(root: HTMLElement): void {
     const evaluation = evaluate(answers);
     track('tool_complete', { tool_id: TOOL, duration_bucket: durationBucket(Date.now() - startedAt) });
 
-    renderResults(results, evaluation.areas, answers, {
+    renderResults(results, evaluation.areas, answers, insights, {
       onPrint: () => {
         track('next_action_click', { tool_id: TOOL, action_type: 'download', target: 'print' });
         window.print();
@@ -141,6 +144,7 @@ export function initHealthCheck(root: HTMLElement): void {
         showStep(0);
       },
       onHelp: () => track('next_action_click', { tool_id: TOOL, action_type: 'solusi', target: '/solusi/' }),
+      onArticle: (href) => track('next_action_click', { tool_id: TOOL, action_type: 'article', target: href }),
     });
 
     form.hidden = true;
@@ -156,9 +160,16 @@ interface ResultHandlers {
   onPrint: () => void;
   onRestart: () => void;
   onHelp: () => void;
+  onArticle: (href: string) => void;
 }
 
-function renderResults(container: HTMLElement, areas: AreaResult[], answers: Answers, on: ResultHandlers) {
+function renderResults(
+  container: HTMLElement,
+  areas: AreaResult[],
+  answers: Answers,
+  insights: Partial<Record<string, InsightLink>>,
+  on: ResultHandlers,
+) {
   const flagged = areas.filter((a) => a.status === 'needs_attention').map((a) => a.area);
   const insufficient = areas.filter((a) => a.status === 'insufficient_info').map((a) => a.area);
 
@@ -184,7 +195,7 @@ function renderResults(container: HTMLElement, areas: AreaResult[], answers: Ans
   container.replaceChildren(
     el('h2', { tabindex: '-1' }, c.resultsTitle),
     summary,
-    ...areas.map((r) => renderArea(r, answers)),
+    ...areas.map((r) => renderArea(r, answers, insights[r.area], on.onArticle)),
     el(
       'aside',
       { class: 'callout' },
@@ -196,7 +207,12 @@ function renderResults(container: HTMLElement, areas: AreaResult[], answers: Ans
   );
 }
 
-function renderArea(r: AreaResult, answers: Answers): HTMLElement {
+function renderArea(
+  r: AreaResult,
+  answers: Answers,
+  insight: InsightLink | undefined,
+  onArticle: (href: string) => void,
+): HTMLElement {
   const area = areaById(r.area);
   const badge = el('span', { class: `hc-badge hc-badge--${r.status}` }, c.status[r.status]);
 
@@ -224,6 +240,14 @@ function renderArea(r: AreaResult, answers: Answers): HTMLElement {
     next = el('p', {}, c.establishedNext);
   }
 
+  // Artikel terkait hanya untuk area yang perlu ditindaklanjuti, dan hanya bila artikelnya sudah terbit.
+  let article: HTMLElement | false = false;
+  if (insight && r.status !== 'established') {
+    const link = el('a', { href: insight.href }, insight.title);
+    link.addEventListener('click', () => onArticle(insight.href));
+    article = el('p', { class: 'hc-article' }, `${t.insights.readMore}: `, link);
+  }
+
   return el(
     'article',
     { class: 'hc-area', 'aria-labelledby': `res-${r.area}` },
@@ -233,5 +257,6 @@ function renderArea(r: AreaResult, answers: Answers): HTMLElement {
     triggers,
     el('h4', {}, c.nextTitle),
     next,
+    article,
   );
 }

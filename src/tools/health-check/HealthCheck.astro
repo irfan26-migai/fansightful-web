@@ -1,11 +1,15 @@
 ---
 import { AREAS, SCALE, STATEMENTS } from './instrument';
 import { id as t } from '../../i18n/id';
+import { loadInsights } from '../../lib/load-insights';
+import { insightsByArea } from '../../lib/insights';
 
 const c = t.healthCheck;
+// Tautan artikel per area untuk halaman hasil; diteruskan lewat atribut data (tanpa script inline, aman untuk CSP).
+const insights = insightsByArea(await loadInsights());
 ---
 
-<div class="hc" data-hc>
+<div class="hc" data-hc data-hc-insights={JSON.stringify(insights)}>
   <section class="hc-intro" data-hc-intro aria-labelledby="hc-title">
     <p class="eyebrow">Tools Lab</p>
     <h1 id="hc-title">{c.title}</h1>
@@ -310,6 +314,11 @@ const c = t.healthCheck;
 
   .hc-answer {
     color: var(--color-ink-muted);
+  }
+
+  .hc-article {
+    margin: var(--space-4) 0 0;
+    font-weight: 500;
   }
 
   .hc-actions {

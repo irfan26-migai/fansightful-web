@@ -29,10 +29,19 @@ if (!existsSync(DIST)) {
   process.exit(1);
 }
 
+const sitemap = existsSync(join(DIST, 'sitemap-0.xml')) ? readFileSync(join(DIST, 'sitemap-0.xml'), 'utf8') : '';
+const sitemapPaths = new Set([...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, loc]) => new URL(loc).pathname));
+
 const problems = [];
 for (const file of htmlFiles(DIST)) {
   const page = relative(DIST, file);
   const html = readFileSync(file, 'utf8');
+
+  // Halaman noindex tidak boleh tercantum di sitemap (sinyal yang saling bertentangan).
+  const path = '/' + page.replace(/\\/g, '/').replace(/index\.html$/, '');
+  if (/<meta name="robots" content="noindex"/.test(html) && sitemapPaths.has(path)) {
+    problems.push(`${page}: noindex tetapi tercantum di sitemap`);
+  }
 
   for (const [, href] of html.matchAll(/\shref="(\/[^"]*)"/g)) {
     if (!href.startsWith('//') && !resolves(href)) problems.push(`${page}: tautan rusak ${href}`);

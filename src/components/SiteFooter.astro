@@ -1,8 +1,12 @@
 ---
 import { id as t } from '../i18n/id';
+import { loadInsights } from '../lib/load-insights';
+import { isInsightsListed } from '../lib/insights';
 
+const showInsights = isInsightsListed((await loadInsights()).length);
 const links = [
   { href: '/tools-lab/', label: t.nav.toolsLab },
+  ...(showInsights ? [{ href: '/insights/', label: t.nav.insights }] : []),
   { href: '/solusi/', label: t.nav.solusi },
   { href: '/tentang/', label: t.nav.tentang },
   { href: '/kontak/', label: t.nav.kontak },
