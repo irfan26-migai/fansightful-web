@@ -108,6 +108,7 @@ Aturan: rekomendasi **tidak** menjadi keputusan final tanpa persetujuan eksplisi
 | D-IMP-29 | 27 Okt 2026 | Foto placeholder di hero Beranda diganti kartu "Contoh tampilan hasil dengan jawaban contoh"; foto founder diganti inisial | Belum ada foto asli; desain melarang foto stok generik | Ganti saat foto asli tersedia |
 | D-IMP-30 | 27 Okt 2026 | Konsep logo v2 (ikon titik naik + kata "Fansightful") dipakai di header/footer | Lebih baik daripada teks polos; tetap konsep | Ganti dengan logo final desainer |
 | D-IMP-31 | 27 Okt 2026 | Kartu area di Beranda: People & HR dan Bisnis & Operasional menaut ke Health Check (menyebut area yang benar-benar diperiksa); Finance & Efisiensi dan Sales & Teknologi berlabel "Direncanakan" tanpa tautan | Tidak ada tool untuk dua area itu | Ya |
+| D-IMP-32 | 27 Okt 2026 | `vite.build.assetsInlineLimit: 0` di `astro.config.mjs`: subset font kecil tidak lagi disisipkan sebagai `data:` URI | Ditemukan di preview Cloudflare: CSP `font-src 'self'` memblokir font `data:` (tidak terlihat di server lokal karena `_headers` hanya berlaku di Cloudflare) | Ya, bila CSP diubah |
 | D-IMP-05 | 27 Okt 2026 | Status "Relatif terbentuk" tetap berlaku bila satu jawaban "Tidak tahu" dan sisanya ≥ level 2 | Konsekuensi urutan aturan di blueprint §5.2; diuji di `evaluate.test.ts` | Ya, bila founder menginginkan aturan lain |
 
 ## 6. Riwayat perubahan

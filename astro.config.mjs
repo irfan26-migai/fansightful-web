@@ -23,4 +23,8 @@ export default defineConfig({
     // CSS sebagai file terpisah agar CSP tidak perlu mengizinkan style inline.
     inlineStylesheets: 'never',
   },
+  vite: {
+    // Jangan sisipkan aset kecil (mis. subset font) sebagai data: URI — CSP `font-src 'self'` memblokirnya.
+    build: { assetsInlineLimit: 0 },
+  },
 });
