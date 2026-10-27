@@ -1,0 +1,67 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Pending from '../components/Pending.astro';
+import { FOUNDER } from '../config';
+
+const principles = [
+  { title: 'Praktis, bukan teoretis', body: 'Setiap konsep dihubungkan dengan pekerjaan nyata.' },
+  { title: 'Interaktif, bukan pasif', body: 'Bila berguna, Anda dapat memeriksa, menghitung, membandingkan, atau menyusun sendiri.' },
+  { title: 'Jelas, bukan rumit', body: 'Hasil dan rekomendasi disertai asumsi dan batasannya.' },
+  { title: 'Bermanfaat sebelum komersial', body: 'Nilai diberikan lebih dulu sebelum menawarkan solusi berbayar.' },
+  {
+    title: 'Transparan',
+    body: 'Kami membedakan fakta, asumsi, interpretasi, rekomendasi, dan hubungan komersial.',
+  },
+];
+---
+
+<PageLayout
+  title="Tentang"
+  heading="Tentang Fansightful"
+  description="Fansightful membantu founder, business builder, dan manajer di Indonesia memahami tantangan bisnis dan mengubah wawasan menjadi tindakan praktis."
+  eyebrow="Tentang"
+  lead="Every insight should help you move forward — setiap wawasan seharusnya membantu Anda melangkah maju."
+>
+  <h2>Misi</h2>
+  <p>
+    Fansightful adalah platform yang membantu founder, business builder, dan manajer di Indonesia memahami tantangan
+    bisnis, menjelajahi pilihan, dan mengubah wawasan menjadi tindakan praktis — melalui tools interaktif, pengetahuan
+    yang dapat diterapkan, dan solusi yang relevan.
+  </p>
+  <p>
+    Kami memulai dari <strong>Business &amp; People Systems</strong>: peran, struktur tim, tujuan, proses kerja, dan
+    praktik kinerja.
+  </p>
+
+  <h2>Pendekatan kami</h2>
+  <ul>
+    {
+      principles.map((p) => (
+        <li>
+          <strong>{p.title}.</strong> {p.body}
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2>Kurator</h2>
+  {
+    FOUNDER ? (
+      <>
+        <p>
+          <strong>{FOUNDER.name}</strong> — {FOUNDER.role}
+        </p>
+        <p>{FOUNDER.bio}</p>
+      </>
+    ) : (
+      <Pending what="Profil founder/kurator: nama, peran, latar belakang dan keahlian yang relevan" />
+    )
+  }
+
+  <h2>Independensi dan hubungan dengan pihak lain</h2>
+  <p>
+    Fansightful adalah brand dan platform independen. Bila suatu layanan diberikan oleh perusahaan terkait atau mitra,
+    kami menyebutkan penyedianya dengan jelas.
+  </p>
+  <Pending what="Entitas pengelola Fansightful dan hubungannya dengan penyedia layanan terkait (Q-02, Q-07)" />
+</PageLayout>

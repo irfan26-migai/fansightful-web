@@ -78,6 +78,10 @@ Aturan: rekomendasi **tidak** menjadi keputusan final tanpa persetujuan eksplisi
 | D-IMP-04 | 27 Okt 2026 | CSP ketat (`script-src 'self'`, `style-src 'self'`) dengan `inlineStylesheets: 'never'`; satu-satunya script inline adalah JSON-LD (tidak dieksekusi, tidak diblokir CSP) | Keamanan dasar | Tinjau saat vendor analytics dipasang (Q-03) |
 | D-IMP-06 | 27 Okt 2026 | Tombol "Lanjut"/"Lihat hasil" tidak dinonaktifkan; validasi dijalankan saat diklik (ringkasan error + pesan per pernyataan + fokus ke pernyataan pertama yang kosong). Menggantikan bunyi AC 2 di blueprint §5.2 ("non-aktif sampai semua terjawab") | Tombol nonaktif tidak menjelaskan apa yang kurang dan sulit ditemukan pengguna keyboard/screen reader; tujuan AC 2 (tidak ada hasil dengan jawaban kosong) tetap terpenuhi | Ya |
 | D-IMP-07 | 27 Okt 2026 | Event `result_view` dikirim tanpa properti hasil (`areas_flagged_count`) | R-09 belum disetujui | Tambahkan bila R-09 disetujui |
+| D-IMP-08 | 27 Okt 2026 | Data yang menunggu pemilik proyek (profil founder, email kontak, entitas, tinjauan privasi) ditampilkan sebagai kotak "Menunggu data" (`<Pending>`, `src/config.ts`); `npm run check:launch` gagal selama kotak itu masih ada | Mencegah placeholder terbit ke produksi tanpa sengaja; menjadi gerbang cutover | Ya |
+| D-IMP-09 | 27 Okt 2026 | `/kontak` memakai tautan `mailto:` (default sementara Q-05) sampai email (Q-09) dan penanganan form diputuskan | Tanpa backend, tanpa penyimpanan data | Ganti dengan form + Pages Function + Turnstile |
+| D-IMP-10 | 27 Okt 2026 | `npm run verify` kini juga memeriksa semua tautan internal di `dist/` (`scripts/check-dist.mjs`) | Acceptance criteria M4 | — |
+| D-IMP-11 | 27 Okt 2026 | Teks halaman statis (home, tentang, privasi, solusi, kontak) disimpan di file halaman; `src/i18n/id.ts` hanya untuk string UI yang dipakai ulang | Konten halaman akan diterjemahkan per halaman, bukan per string | Ya |
 | D-IMP-05 | 27 Okt 2026 | Status "Relatif terbentuk" tetap berlaku bila satu jawaban "Tidak tahu" dan sisanya ≥ level 2 | Konsekuensi urutan aturan di blueprint §5.2; diuji di `evaluate.test.ts` | Ya, bila founder menginginkan aturan lain |
 
 ## 6. Riwayat perubahan
@@ -87,4 +91,5 @@ Aturan: rekomendasi **tidak** menjadi keputusan final tanpa persetujuan eksplisi
 | 27 Okt 2026 | Dokumen dibuat dari audit awal |
 | 27 Okt 2026 | R-01, R-02, R-04 disetujui pengguna; Q-08 dan Q-09 ditambahkan; rencana implementasi P0 dibuat (`04_P0_IMPLEMENTATION_PLAN.md`) |
 | 27 Okt 2026 | M0–M2 selesai di `fansightful-web/` (commit `157f570`, belum di-deploy); D-IMP-01 s.d. D-IMP-05 dicatat |
-| 27 Okt 2026 | M3 selesai: `/tools-lab/` dan `/tools-lab/health-check/` (kuesioner bertahap, validasi, hasil, cetak, CTA bantuan); adapter analytics no-op; D-IMP-06 dan D-IMP-07 dicatat. Belum di-deploy |
+| 27 Okt 2026 | M3 selesai: `/tools-lab/` dan `/tools-lab/health-check/` (kuesioner bertahap, validasi, hasil, cetak, CTA bantuan); adapter analytics no-op; D-IMP-06 dan D-IMP-07 dicatat (commit `a04092e`). Belum di-deploy |
+| 27 Okt 2026 | M4 selesai: homepage lengkap, `/tentang`, `/privasi` (draf), `/solusi` dan `/kontak` (default sementara), header mobile satu baris, pemeriksa tautan dan gerbang launch; D-IMP-08 s.d. D-IMP-11 dicatat. Belum di-commit, belum di-deploy |

@@ -1,0 +1,38 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Pending from '../components/Pending.astro';
+import { CONTACT_EMAIL } from '../config';
+
+// Default sementara: tautan email (Q-05 dan Q-09). Form dengan Pages Function + Turnstile menyusul.
+const subject = encodeURIComponent('Diskusi kebutuhan bisnis');
+---
+
+<PageLayout
+  title="Hubungi kami"
+  description="Hubungi Fansightful untuk mendiskusikan kebutuhan bisnis dan tim Anda."
+  eyebrow="Kontak"
+  lead="Ceritakan singkat situasi Anda. Kami akan membalas melalui email."
+>
+  {
+    CONTACT_EMAIL ? (
+      <p>
+        <a class="button" href={`mailto:${CONTACT_EMAIL}?subject=${subject}`}>
+          Kirim email ke {CONTACT_EMAIL}
+        </a>
+      </p>
+    ) : (
+      <Pending what="Alamat email penerima pesan kontak (Q-09)" />
+    )
+  }
+
+  <h2>Agar kami dapat membantu</h2>
+  <ul>
+    <li>Jenis dan ukuran bisnis Anda (perkiraan jumlah orang di tim).</li>
+    <li>Masalah yang paling ingin Anda selesaikan.</li>
+    <li>Bila ada, ringkasan hasil Health Check (gunakan tombol "Cetak atau simpan sebagai PDF").</li>
+  </ul>
+  <p>
+    Mohon jangan mengirim data pribadi karyawan, data gaji perorangan, atau informasi rahasia lainnya pada pesan
+    pertama. Penggunaan data yang Anda kirim dijelaskan di <a href="/privasi/">Kebijakan Privasi</a>.
+  </p>
+</PageLayout>

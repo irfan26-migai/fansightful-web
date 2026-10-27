@@ -1,8 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Pending from '../components/Pending.astro';
+import { FOUNDER } from '../config';
 import { id as t } from '../i18n/id';
 
-// Homepage sementara (fondasi M1). Section lengkap sesuai blueprint §4 dibangun di M4.
+// Struktur mengikuti blueprint §4. Section "Insights terbaru" ditambahkan di M5 dan hanya
+// tampil bila sudah ada minimal 3 artikel.
 const organization = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
@@ -10,17 +13,109 @@ const organization = {
   url: Astro.site?.href,
   description: t.site.description,
 };
+
+const TOOL = '/tools-lab/health-check/';
+
+// Setiap gejala dipetakan ke area Health Check yang memeriksanya.
+const problems = [
+  { title: 'Peran dan tanggung jawab tumpang tindih', area: 'Peran & tanggung jawab' },
+  { title: 'Target ada, tapi tidak ada yang merasa memilikinya', area: 'Tujuan & prioritas' },
+  { title: 'Penilaian kinerja terasa subjektif', area: 'Praktik kinerja' },
+  { title: 'Semua keputusan masih menunggu founder', area: 'Peran & tanggung jawab, Struktur tim' },
+];
+
+const steps = [
+  { title: 'Periksa', body: 'Jawab 20 pernyataan singkat tentang kondisi tim dan cara kerja bisnis Anda saat ini.' },
+  { title: 'Pahami', body: 'Lihat area mana yang perlu perhatian, pernyataan apa yang memicunya, dan mengapa itu penting.' },
+  { title: 'Bertindak', body: 'Mulai dari satu sampai tiga langkah konkret untuk area yang paling mendesak.' },
+];
 ---
 
 <BaseLayout jsonLd={[organization]}>
-  <section class="hero container">
+  <section class="hero container" aria-labelledby="hero-title">
     <p class="eyebrow">Untuk founder, business builder, dan manajer</p>
-    <h1>Pahami masalah bisnis Anda. Temukan langkah berikutnya.</h1>
+    <h1 id="hero-title">Pahami masalah bisnis Anda. Temukan langkah berikutnya.</h1>
     <p class="lead prose">
       Tools interaktif, wawasan praktis, dan solusi yang relevan untuk membangun bisnis dan tim yang lebih sehat.
     </p>
-    <div class="hero__actions">
-      <a class="button" href="/tools-lab/health-check/">Mulai Business &amp; People Health Check</a>
+    <div class="actions">
+      <a class="button" href={TOOL}>Mulai Business &amp; People Health Check</a>
+      <a class="button button--secondary" href="#cara-kerja">Lihat cara kerjanya</a>
+    </div>
+  </section>
+
+  <section class="band" aria-labelledby="problems-title">
+    <div class="container">
+      <h2 id="problems-title">Mana yang paling terasa di bisnis Anda?</h2>
+      <ul class="cards cards--4">
+        {
+          problems.map((p) => (
+            <li class="card">
+              <h3>
+                <a href={TOOL}>{p.title}</a>
+              </h3>
+              <p>Diperiksa di area: {p.area}</p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="tools-title">
+    <p class="eyebrow">Tools Lab</p>
+    <h2 id="tools-title">Mulai dari pemeriksaan awal</h2>
+    <div class="feature">
+      <div>
+        <h3>{t.healthCheck.title}</h3>
+        <p>{t.healthCheck.summary}</p>
+        <ul class="facts">
+          {t.healthCheck.facts.map((f) => <li>{f}</li>)}
+        </ul>
+      </div>
+      <a class="button" href={TOOL}>{t.healthCheck.start}</a>
+    </div>
+  </section>
+
+  <section id="cara-kerja" class="container section" aria-labelledby="how-title" tabindex="-1">
+    <h2 id="how-title">Cara kerjanya</h2>
+    <ol class="cards cards--3 steps">
+      {
+        steps.map((s) => (
+          <li class="card">
+            <h3>{s.title}</h3>
+            <p>{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+    <p class="prose note">Hasilnya adalah pemeriksaan awal, bukan penilaian definitif.</p>
+  </section>
+
+  <section class="container section" aria-labelledby="curator-title">
+    <h2 id="curator-title">Dikurasi oleh</h2>
+    {
+      FOUNDER ? (
+        <div class="prose">
+          <p>
+            <strong>{FOUNDER.name}</strong> — {FOUNDER.role}
+          </p>
+          <p>{FOUNDER.bio}</p>
+        </div>
+      ) : (
+        <Pending what="Profil founder/kurator: nama, peran, 1–2 kalimat keahlian yang relevan, foto (opsional)" />
+      )
+    }
+    <a href="/tentang/">Tentang Fansightful</a>
+  </section>
+
+  <section class="band" aria-labelledby="help-title">
+    <div class="container section--tight">
+      <h2 id="help-title">Butuh bantuan lebih lanjut?</h2>
+      <p class="prose">
+        Jika Anda ingin dibantu menerapkan perbaikan, lihat bantuan yang tersedia — termasuk siapa yang memberikannya.
+      </p>
+      <a class="button button--secondary" href="/solusi/">Lihat opsi bantuan</a>
     </div>
   </section>
 </BaseLayout>
@@ -34,10 +129,121 @@ const organization = {
     max-width: 20ch;
   }
 
-  .hero__actions {
+  .actions {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-3);
     margin-top: var(--space-6);
+  }
+
+  .section {
+    padding-block: var(--space-12);
+  }
+
+  .section--tight {
+    padding-block: var(--space-12);
+  }
+
+  #cara-kerja:focus {
+    outline: none;
+  }
+
+  .band {
+    background: var(--color-surface-muted);
+    padding-block: var(--space-12);
+  }
+
+  .cards {
+    display: grid;
+    gap: var(--space-4);
+    margin: var(--space-6) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  @media (min-width: 40rem) {
+    .cards--4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 64rem) {
+    .cards--4 {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .cards--3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card {
+    position: relative;
+    padding: var(--space-6);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+  }
+
+  .card h3 {
+    font-size: var(--text-lg);
+  }
+
+  .card p {
+    margin: 0;
+    color: var(--color-ink-muted);
+  }
+
+  .cards--4 .card:hover {
+    border-color: var(--color-accent);
+  }
+
+  .card h3 a {
+    color: var(--color-ink);
+    text-decoration: none;
+  }
+
+  .card h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .steps {
+    counter-reset: step;
+  }
+
+  .steps .card h3::before {
+    counter-increment: step;
+    content: counter(step) '. ';
+    color: var(--color-accent);
+  }
+
+  .feature {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--space-6);
+    margin-top: var(--space-6);
+    padding: var(--space-8);
+    border: 1px solid var(--color-accent);
+    border-radius: var(--radius);
+    background: var(--color-accent-soft);
+  }
+
+  .feature h3 {
+    font-size: var(--text-xl);
+  }
+
+  .facts {
+    margin: 0;
+    padding-left: var(--space-6);
+    color: var(--color-ink-muted);
+  }
+
+  .note {
+    margin-top: var(--space-6);
+    color: var(--color-ink-muted);
   }
 </style>

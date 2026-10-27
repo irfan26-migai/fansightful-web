@@ -1,0 +1,46 @@
+---
+// Tata letak halaman teks sederhana (Tentang, Privasi, Solusi, Kontak).
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  /** Judul H1 bila berbeda dari judul tab. */
+  heading?: string;
+  description: string;
+  eyebrow?: string;
+  lead?: string;
+}
+
+const { title, heading = title, description, eyebrow, lead } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="container page">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>{heading}</h1>
+    {lead && <p class="lead prose">{lead}</p>}
+    <div class="prose page__body">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .page {
+    padding-block: var(--space-12) var(--space-8);
+  }
+
+  .page__body :global(h2) {
+    margin-top: var(--space-8);
+  }
+
+  .page__body :global(ul),
+  .page__body :global(ol) {
+    padding-left: var(--space-6);
+    margin: 0 0 var(--space-4);
+  }
+
+  .page__body :global(li) {
+    margin-bottom: var(--space-2);
+  }
+</style>

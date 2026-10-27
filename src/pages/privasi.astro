@@ -1,0 +1,53 @@
+---
+import PageLayout from '../layouts/PageLayout.astro';
+import Pending from '../components/Pending.astro';
+
+// DRAF. Isi mencerminkan perilaku situs saat ini; perbarui setiap kali analytics, form, atau newsletter ditambahkan.
+---
+
+<PageLayout
+  title="Kebijakan Privasi"
+  description="Data apa yang diproses Fansightful, untuk apa, dan bagaimana Anda dapat mengendalikannya."
+  eyebrow="Privasi"
+  lead="Kami mengumpulkan data sesedikit mungkin dan menjelaskan dengan terbuka apa yang terjadi pada data Anda."
+>
+  <Pending
+    what="Tinjauan kebijakan ini terhadap UU No. 27 Tahun 2022 tentang Pelindungan Data Pribadi, entitas pengendali data, masa simpan pesan, dan tanggal berlaku"
+  />
+
+  <h2>Jawaban Business &amp; People Health Check</h2>
+  <p>
+    Jawaban Anda diproses di browser perangkat Anda sendiri. Jawaban <strong>tidak dikirim ke server kami dan tidak
+    disimpan</strong>. Bila halaman dimuat ulang atau ditutup, jawaban hilang. Ringkasan hasil hanya tersimpan bila Anda
+    sendiri mencetak atau menyimpannya sebagai PDF.
+  </p>
+
+  <h2>Pesan yang Anda kirim</h2>
+  <p>
+    Bila Anda menghubungi kami melalui email, kami menerima alamat email, nama, dan isi pesan yang Anda tulis. Data ini
+    hanya digunakan untuk membalas dan menindaklanjuti pertanyaan Anda, dan tidak dibagikan kepada pihak lain untuk
+    keperluan pemasaran.
+  </p>
+
+  <h2>Data teknis dan hosting</h2>
+  <p>
+    Situs ini di-hosting di Cloudflare. Seperti layanan hosting pada umumnya, Cloudflare memproses data teknis seperti
+    alamat IP dan jenis browser untuk menyajikan halaman dan melindungi situs dari penyalahgunaan.
+  </p>
+
+  <h2>Cookie dan analytics</h2>
+  <p>
+    Situs ini tidak memasang cookie sendiri dan saat ini tidak menggunakan layanan analytics. Font dimuat dari server
+    kami sendiri, bukan dari layanan pihak ketiga. Bila kelak kami menambahkan analytics untuk memahami penggunaan tools,
+    kebijakan ini akan diperbarui lebih dulu, dan data yang dicatat tidak akan memuat jawaban Anda atau data pribadi.
+  </p>
+
+  <h2>Hak Anda</h2>
+  <p>
+    Anda dapat meminta akses, perbaikan, atau penghapusan data yang Anda kirimkan kepada kami melalui halaman
+    <a href="/kontak/">Kontak</a>.
+  </p>
+
+  <h2>Perubahan kebijakan</h2>
+  <p>Perubahan material akan dicantumkan di halaman ini beserta tanggal berlakunya.</p>
+</PageLayout>

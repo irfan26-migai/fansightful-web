@@ -1,0 +1,24 @@
+---
+// Penanda konten yang menunggu data dari pemilik proyek. Dicari oleh `npm run check:launch`.
+interface Props {
+  what: string;
+}
+
+const { what } = Astro.props;
+---
+
+<div class="pending" data-pending={what} role="note">
+  <strong>Menunggu data:</strong>{' '}{what}
+</div>
+
+<style>
+  .pending {
+    margin-block: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border: 2px dashed #8a5a00;
+    border-radius: var(--radius);
+    background: var(--color-warning-soft);
+    color: #5c3c00;
+    font-size: var(--text-sm);
+  }
+</style>
