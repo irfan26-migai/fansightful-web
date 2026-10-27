@@ -11,10 +11,12 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "vitest run",
-    "verify": "npm run check && npm run test && npm run build && node scripts/check-dist.mjs",
+    "verify": "npm run check && npm run build && npm run test && node scripts/check-dist.mjs",
     "astro": "astro",
     "test:coverage": "vitest run --coverage --coverage.include='src/tools/**/*.ts' --coverage.exclude='**/*.test.ts'",
-    "check:launch": "node scripts/check-dist.mjs --launch"
+    "check:launch": "node scripts/check-dist.mjs --launch",
+    "test:e2e": "playwright test",
+    "verify:full": "npm run verify && npm run test:e2e"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -23,7 +25,9 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@playwright/test": "^1.64.1",
     "@vitest/coverage-v8": "^5.0.5",
+    "jsdom": "^30.1.3",
     "typescript": "^6.0.3",
     "vitest": "^5.0.5"
   }

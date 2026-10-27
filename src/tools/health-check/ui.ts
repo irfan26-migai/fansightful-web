@@ -220,7 +220,8 @@ interface ResultHandlers {
 function contextLine(p: Profile): string {
   const date = new Intl.DateTimeFormat('id-ID', { dateStyle: 'long' }).format(new Date());
   const parts = [
-    p.type && p.type !== 'Lainnya' ? p.type.toLowerCase() : '',
+    // Huruf pertama saja yang dikecilkan, agar akronim seperti "UMKM" tetap utuh.
+    p.type && p.type !== 'Lainnya' ? p.type.replace(/^\p{Lu}(?=\p{Ll})/u, (ch) => ch.toLowerCase()) : '',
     p.size ? c.contextSize(p.size) : '',
     p.age ? c.contextAge(p.age) : '',
   ].filter(Boolean);
