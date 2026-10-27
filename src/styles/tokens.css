@@ -1,0 +1,51 @@
+/*
+ * Token desain — opsi visual A "Editorial hangat" (default sementara, R-07 belum final).
+ * Kontras teks terhadap --color-bg ditargetkan WCAG AA; ukur ulang bila nilai diubah.
+ */
+:root {
+  /* Warna */
+  --color-bg: #faf8f4;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f1ede6;
+  --color-ink: #1b2026;
+  --color-ink-muted: #545e69;
+  --color-border: #ddd6cb;
+  --color-accent: #12597a;
+  --color-accent-hover: #0d4560;
+  --color-accent-soft: #e2eff4;
+  --color-on-accent: #ffffff;
+  --color-focus: #0b6fa0;
+  --color-warning-soft: #fbf0d9;
+
+  /* Tipografi */
+  --font-display: 'Fraunces Variable', Georgia, 'Times New Roman', serif;
+  --font-text: 'Outfit Variable', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --text-sm: 0.875rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.25rem;
+  --text-xl: clamp(1.5rem, 1.2rem + 1.2vw, 1.875rem);
+  --text-2xl: clamp(2rem, 1.4rem + 2.6vw, 3.25rem);
+  --leading-tight: 1.15;
+  --leading-body: 1.65;
+
+  /* Spasi dan tata letak */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --gutter: 1rem;
+  --measure: 68ch;
+  --container: 72rem;
+  --radius: 10px;
+  --radius-pill: 999px;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --gutter: 2rem;
+  }
+}

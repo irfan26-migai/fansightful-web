@@ -1,0 +1,28 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { id as t } from '../i18n/id';
+---
+
+<BaseLayout title={t.notFound.title} canonicalPath="/404" noindex>
+  <section class="container not-found">
+    <p class="eyebrow">404</p>
+    <h1>{t.notFound.title}</h1>
+    <p class="lead prose">{t.notFound.body}</p>
+    <div class="not-found__actions">
+      <a class="button" href="/">{t.notFound.toHome}</a>
+      <a class="button button--secondary" href="/tools-lab/">{t.notFound.toTools}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .not-found {
+    padding-block: var(--space-16);
+  }
+
+  .not-found__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+</style>

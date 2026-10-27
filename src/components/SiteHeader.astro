@@ -1,0 +1,90 @@
+---
+import { id as t } from '../i18n/id';
+
+// Insights dan Playbooks belum tampil di navigasi sampai kontennya ada (blueprint §3.2).
+const items = [
+  { href: '/tools-lab/', label: t.nav.toolsLab },
+  { href: '/solusi/', label: t.nav.solusi },
+  { href: '/tentang/', label: t.nav.tentang },
+];
+
+const current = Astro.url.pathname;
+const isCurrent = (href: string) => current === href || current.startsWith(href);
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="brand" href="/" aria-label={t.a11y.home}>Fan<em>sight</em>ful</a>
+    <nav aria-label={t.a11y.mainNav}>
+      <ul class="nav">
+        {
+          items.map((item) => (
+            <li>
+              <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li><a class="button button--secondary nav__cta" href="/kontak/">{t.nav.kontak}</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
+  }
+
+  .site-header__inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3) var(--space-6);
+    padding-block: var(--space-4);
+  }
+
+  .brand {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    text-decoration: none;
+    letter-spacing: -0.01em;
+  }
+
+  .brand em {
+    font-weight: 400;
+  }
+
+  .nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav a:not(.button) {
+    color: var(--color-ink);
+    text-decoration: none;
+    font-weight: 500;
+    padding-block: var(--space-2);
+  }
+
+  .nav a:not(.button):hover,
+  .nav a[aria-current='page'] {
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  .nav__cta {
+    min-height: 40px;
+    padding: var(--space-2) var(--space-4);
+  }
+</style>

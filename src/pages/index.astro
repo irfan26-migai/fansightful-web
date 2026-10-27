@@ -1,0 +1,43 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { id as t } from '../i18n/id';
+
+// Homepage sementara (fondasi M1). Section lengkap sesuai blueprint §4 dibangun di M4.
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: t.site.name,
+  url: Astro.site?.href,
+  description: t.site.description,
+};
+---
+
+<BaseLayout jsonLd={[organization]}>
+  <section class="hero container">
+    <p class="eyebrow">Untuk founder, business builder, dan manajer</p>
+    <h1>Pahami masalah bisnis Anda. Temukan langkah berikutnya.</h1>
+    <p class="lead prose">
+      Tools interaktif, wawasan praktis, dan solusi yang relevan untuk membangun bisnis dan tim yang lebih sehat.
+    </p>
+    <div class="hero__actions">
+      <a class="button" href="/tools-lab/health-check/">Mulai Business &amp; People Health Check</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-16) var(--space-12);
+  }
+
+  .hero h1 {
+    max-width: 20ch;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+  }
+</style>
